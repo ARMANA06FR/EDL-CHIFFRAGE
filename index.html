@@ -1,0 +1,1426 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>État des lieux</title>
+<meta name="theme-color" content="#0e6d8c">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EDL">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6f6;--card:#fff;--ink:#17252d;--mut:#5d6d76;--line:#d5dde0;--acc:#0e6d8c;--accf:#fff;--nv:#7d8b94;--nf:#2a78c9;--be:#2e8b57;--eu:#a87b0c;--me:#c85d18;--hs:#c62f3b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11191d;--card:#1a252b;--ink:#e6eef1;--mut:#93a4ad;--line:#2c3a42;--acc:#4fb3d3;--accf:#08202a}}
+:root[data-theme="dark"]{--bg:#11191d;--card:#1a252b;--ink:#e6eef1;--mut:#93a4ad;--line:#2c3a42;--acc:#4fb3d3;--accf:#08202a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 Barlow,system-ui,sans-serif}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;gap:8px;padding:8px 12px;flex-wrap:wrap}
+.top h1{font:600 20px 'Barlow Condensed',Barlow,sans-serif;margin:0;flex:1}
+#st{font-size:13px;color:var(--mut)}
+#tabs{display:flex;gap:6px;overflow-x:auto;padding:0 12px 8px}
+.tb{flex:none;border:1px solid var(--line);background:none;color:var(--ink);padding:7px 12px;border-radius:8px;font:inherit;font-size:14px}
+.tb.on{background:var(--acc);border-color:var(--acc);color:var(--accf)}
+main{max-width:760px;margin:0 auto;padding:12px;padding-bottom:80px}
+h2{font:600 22px 'Barlow Condensed',Barlow,sans-serif;margin:18px 0 8px}
+h3{font-size:15px;margin:16px 0 6px;color:var(--mut);font-weight:600}
+h3.strong{color:var(--ink);font-weight:700;font-size:16px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+.f{display:flex;flex-direction:column;font-size:13px;color:var(--mut);gap:3px}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px;width:100%}
+input:focus-visible,select:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.seg{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:14px}
+.seg>span{color:var(--mut);margin-right:4px}
+.it{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0}
+.it.warn{background:#fdf0dd;border-color:var(--eu);border-width:2px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .it.warn{background:#3a2f1a}}
+:root[data-theme="dark"] .it.warn{background:#3a2f1a}
+.it.filled{background:#eaf6ee}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .it.filled{background:#16281c}}
+:root[data-theme="dark"] .it.filled{background:#16281c}
+.badge{font-size:11px;padding:3px 8px;border-radius:12px;font-weight:600;flex:none}
+.badge.deg{background:#fbe4e6;color:#c62f3b}
+.badge.better{background:#e8f5ec;color:#2e8b57}
+.badge.diff,.badge.same{background:#eef1f2;color:#5d6d76}
+.mini.d{border-color:var(--hs);color:var(--hs)}
+.tb .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--be);margin-left:5px;vertical-align:middle}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.hd b{flex:1}
+.hd select{width:auto;max-width:50%;padding:5px}
+.mini{border:1px solid var(--line);background:none;color:var(--mut);border-radius:7px;width:26px;height:26px;font:inherit;font-size:15px;line-height:1;flex:none}
+.row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.c{border:1px solid var(--line);background:none;color:var(--ink);border-radius:8px;padding:8px 12px;min-height:40px;font:inherit;font-size:14px;font-weight:500}
+.c.on{background:var(--c,var(--acc));border-color:var(--c,var(--acc));color:var(--t,var(--accf))}
+.rsub{margin:4px 0 0;display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.rsub .c{padding:5px 9px;min-height:30px;font-size:12px;font-weight:400;opacity:.8;border-radius:7px}
+.rsub .c.on{opacity:1}
+.tc{width:90px!important;flex:none}
+.tc input{padding:5px}
+.ob{margin-top:6px;min-height:38px;resize:none;overflow:hidden}
+.btn{display:inline-block;border:1px solid var(--acc);color:var(--acc);background:none;border-radius:8px;padding:9px 14px;font:inherit;font-size:15px;font-weight:500}
+.btn.p{background:var(--acc);color:var(--accf)}
+.btn.d{border-color:var(--hs);color:var(--hs)}
+.btn.sm{padding:6px 10px;font-size:13px}
+.lg{font-size:13px;color:var(--mut);margin:0 0 6px}
+.ph{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.ph div{position:relative}
+.ph img{width:96px;height:96px;object-fit:cover;border-radius:8px}
+.ph button{position:absolute;top:2px;right:2px;border:0;background:#000a;color:#fff;border-radius:50%;width:24px;height:24px}
+.kg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+canvas.sg{width:100%;height:150px;background:#fff;border:1px solid var(--line);border-radius:8px;touch-action:none}
+canvas.sg.locked{border-color:var(--be);border-width:2px}
+.act{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;align-items:center}
+.cn{grid-template-columns:repeat(auto-fit,minmax(72px,1fr));margin:6px 0}
+#qb{display:none;position:fixed;left:0;right:0;bottom:0;gap:6px;overflow-x:auto;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--line);z-index:9}
+#qb button{flex:none;border:1px solid var(--line);background:none;color:var(--ink);border-radius:8px;padding:8px 12px;font:inherit;font-size:14px}
+#recap{display:none}
+#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;align-items:center;justify-content:center;padding:16px}
+#modal.show{display:flex}
+#modal .card{background:var(--card);color:var(--ink);border-radius:12px;padding:18px;max-width:380px;width:100%;max-height:80vh;overflow:auto}
+#modal .act button{text-align:left}
+#recap.show{display:block;position:fixed;inset:0;background:var(--bg);color:var(--ink);overflow:auto;z-index:30;padding:16px}
+#recap.show table{border-collapse:separate;border-spacing:0 6px;width:100%;margin:6px 0 14px;font-size:13px}
+#recap.show td,#recap.show th{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+#recap.show tr td:first-child,#recap.show tr th:first-child{border-radius:8px 0 0 8px}
+#recap.show tr td:last-child,#recap.show tr th:last-child{border-radius:0 8px 8px 0}
+#recap.show th{background:#eef3f5;font-weight:600}
+#recap.show img{max-width:160px;margin:3px}
+#recap.show .hdband{background:#0e6d8c;color:#fff;border-radius:12px;padding:16px 20px;margin-bottom:12px}
+#recap.show .hdband .brand{font-weight:800;font-size:20px;letter-spacing:.06em;display:block}
+#recap.show .hdband .sub{font-size:13px;opacity:.9}
+#recap.show .sum{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+#recap.show .sc{font-size:12px;padding:5px 10px;border-radius:20px;color:#333;font-weight:500}
+#rcls{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:10px;z-index:31}
+@media print{header,main,#rcls{display:none}#recap{display:block;color:#000;background:#fff}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><h1>État des lieux</h1><span id="st"></span>
+    <button class="btn d sm" id="neu">Nouveau</button>
+    <label class="btn sm" title="Reprendre un EDL (JSON)">Importer<input type="file" accept="application/json" hidden id="imp"></label>
+    <button class="btn sm" id="expj">JSON</button>
+    <button class="btn sm" id="ape">Aperçu</button>
+    <button class="btn sm" id="shr">Partager</button>
+    <button class="btn p sm" id="exp">Exporter</button>
+  </div>
+  <nav id="tabs"></nav>
+</header>
+<main id="app"></main>
+<button class="btn p" id="rcls" style="display:none">Fermer l’aperçu</button>
+<div id="recap"></div>
+<div id="modal"><div class="card" id="modalBody"></div></div>
+<div id="qb"></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const ST=[['NV','Non vérifié','--nv'],['NF','Neuf','--nf'],['BE','Bon état','--be'],['EU','État d’usage','--eu'],['ME','Mauvais état','--me'],['HS','Hors service','--hs']];
+const SOL=['Carrelage','Marbre','Parquet','Parquet flottant','Pierre naturelle','Lino/PVC','Béton'],PLI=['Carrelage','Marbre','Bois peint','Bois verni','PVC','Goulottes'],MUR=['Crépi','Peint','Papier peint','Toile de verre'],VMC=['VMC','Autogyre','VH','VB','VH + VB'];
+const DMAT=['Bois peint','Bois verni','Verre','Alu','Métal','Autre'],CRED=['Faïence','Stratifié','Verre','Inox','Autre'],REV=['Émail','Céramique','Pierre naturelle','Composite','Verre','Béton','Autre'];
+const PRI=['Prises',null,['PC','Tel','TV']],ECL=['Éclairage',null,['Plafonnier','Applique','Amp. EU','Amp. HS/abs','Néon','Fils nus']];
+const NOTRCH=new Set(['Interphone / visiophone','Serrure','Judas','Chauffage','Sonnette','Prises','Éclairage','Ventilation','Robinets','Siphon','Mélangeur','Joint silicone','Évier','Miroir','Pare-douche','Porte-douchette','Porte-serviette','Lave-main']);
+const CHAUF=['Radiateur','Convecteur','Climatisation','Télécommande'];
+const SERR=['Serrure / verrou',['Serrure','Verrou','Loquet'],null,null,null,{when:'Serrure',label:'Nombre de clés'}];
+const VOLM=['Bois peint','Bois verni','Alu','PVC'];
+const BASE=[['Porte d’accès',DMAT],SERR,['Sol',SOL],['Plinthes',PLI],['Murs',MUR],['Plafond',MUR],
+  ['Chauffage',CHAUF,['Nb'],null,1],['Ouvertures',['Simple vitrage','Double vitrage'],['Fen.','P.fen.','Baie coulissante'],null,1,null,VOLM],
+  ['Volets',['Roulant','Roulant électrique','Battant','Pliant','Coulissant'],['Nb'],null,1,null,VOLM],['Placards',null,['Portes','Rayons','Tiroirs'],null,1],PRI,ECL];
+const SDB_BASE=BASE.map(x=>x[0]==='Chauffage'?['Chauffage',[...CHAUF,'Sèche-serviette'],['Nb'],null,1]:x);
+const WCF=['Réservoir','Cuvette','Abattant','Robinet de chasse'];
+const TPL={
+ base:{l:'Pièce (séjour, chambre…)',i:BASE},
+ entree:{l:'Entrée',i:[['Porte palière',DMAT],['Serrure'],['Verrou',['Verrou haut','Verrou bas'],null,null,1],['Sonnette'],['Judas'],['Interphone / visiophone',['Interphone','Visiophone']],...BASE.filter(x=>x[0]!=='Porte d’accès'&&x!==SERR)]},
+ cuisine:{l:'Cuisine',i:[...BASE,['Évier',['Grès','Inox','Résine','Pierre naturelle','Verre']],['Joint silicone'],['Mélangeur'],['Siphon'],['Placard sous évier',null,['Portes','Rayons','Tiroirs'],null,1],['Plan de travail'],['Robinets',null,null,['Gaz','MàL']],['Crédence',CRED],['Ventilation',VMC,null,null,1]]},
+ sdb:{l:'Salle de bain',i:[...SDB_BASE,['Placard sous lavabo',null,['Portes','Rayons','Tiroirs'],null,1],['Miroir',null,['Nombre'],null,1],['Pare-douche'],['Porte-douchette'],['Porte-serviette'],['Faïence'],['Ventilation',VMC,null,null,1]]},
+ wc:{l:'WC',i:[['Porte d’accès',DMAT],SERR,['Sol',SOL],['Murs',MUR],['Plafond',MUR],ECL,['Ventilation',VMC,null,null,1],['Placard',null,['Portes','Rayons','Tiroirs'],null,1],['Porte papier']]},
+ balcon:{l:'Balcon',i:[['Sol',SOL],['Plinthe',PLI],['Façade',MUR],['Plafond',MUR],['Placard',null,['Portes','Rayons','Tiroirs'],null,1],PRI,ECL,['Garde-corps'],['Prélat'],['Store banne']]},
+ garage:{l:'Garage',i:[['Porte d’accès',DMAT],SERR,['Porte de garage'],['Sol',SOL],['Murs',MUR],['Plafond',MUR],['Ouvertures',null,null,null,1],['Placards',null,['Portes','Rayons','Tiroirs'],null,1],PRI,ECL]},
+ cave:{l:'Cave',i:[['Porte d’accès',DMAT],SERR,['Sol',SOL],['Murs',MUR],['Plafond',MUR],['Ouvertures',null,null,null,1],PRI,ECL]},
+ ext:{l:'Jardin / extérieur',i:[['Pelouse'],['Allées'],['Haies',['≤ 2 m','> 2 m']],['Terrasses'],['Arbres / plantes'],['Façade'],['Auvent'],['Pergolas'],PRI,ECL,['Grillage'],['Murs de clôture'],['Portail d’entrée'],['Autre portail'],['Divers']]}
+};
+const GEN=[
+['Rendez-vous',[['client','Client (propriétaire)'],['cliente','E-mail client'],['clientte','Téléphone client'],['rdv','N° RDV'],['date','Date','date'],['heure','Heure','time'],['cadr','Adresse du client'],['ccp','Code postal'],['cville','Ville']]],
+['Logement',[['typ','Type (T2, T3…)'],['etage','Étage'],['digi','Digicode'],['hp','H/plafond'],['adr','Adresse du logement'],['cp','Code postal'],['ville','Ville'],['meub','Logement',['Vide','Meublé']],['inv','Inventaire',['À établir','À contrôler','À ignorer']]]],
+['Locataires',[['ent','Locataire entrant'],['entem','E-mail entrant'],['entte','Téléphone entrant'],['sor','Locataire sortant'],['sorem','E-mail sortant'],['sorte','Téléphone sortant'],['nadr','Nouvelle adresse du sortant'],['ncp','Code postal'],['nville','Ville']]]];
+const CPT=[
+['Équipements',[['ecs','Eau chaude',['Cumulus','Chauffe-eau gaz','Collectif']],['ecsm','Marque / modèle'],['chf','Chauffage',['Indiv. élec.','Indiv. gaz','Collectif']],['daaf','DAAF',['Oui','Non']],['daafl','Emplacement DAAF'],['cert','Certificat d’entretien',['Oui','Non']],['coupe','Alimentation coupée (sous réserve)',['Aucune','Eau','Électricité','Eau + élec.']]]],
+['Villa / maison',[['chd','Chaudière',['Fuel','Gaz']],['cuve','Niveau cuve (litres)'],['chc','Certificat d’entretien chaudière',['Oui','Non']],['chdate','Daté du','date']]]];
+const MT={'Eau':['Froide (m³)','Chaude (m³)'],'Électricité':['HP (kWh)','HC (kWh)'],'Gaz':['Index (m³)',''],'Autre':['Index 1','Index 2']};
+const SS=ST.map(x=>x[0]),SN=['Baignoire','Douche','Lavabo','Bidet'],SC=['Mél./Mitig.','Bonde','Siphon','Jt silicone','Flexible','Douchette','Inverseur'];
+const ANN0=['Boîte à lettres','Cave','Garage','Grenier'];
+const KEYS0=['Porte immeuble','Serrure principale','Verrou haut','Verrou bas','Boîte à lettres','Accès cave','Cave','Accès garage','Garage','Grenier','Porte SAS','Clé magnétique','Émetteur','Non identifiées'];
+const SIG=[['sgS','Locataire sortant / représentant','sor'],['sgE','Locataire entrant / représentant','ent'],['sgP','Propriétaire','client'],['sgX','Expert EDL 06 IMMO','']];
+const GENKEYS=GEN.flatMap(([,f])=>f.map(x=>x[0])),CPTKEYS=CPT.flatMap(([,f])=>f.map(x=>x[0]));
+const QB=['TDH','Fiss.','Éclats','Rayures','DDE','Traces','Colmatages','Reprises peinture','Sale','Ancien','Usure normale','Mal fixé','Cassé','Impact','(BE)','(EU)','(ME)'];
+const DD=['Table','Chaise','Table basse','Meuble TV','Télévision','Canapé','Canapé-lit','Fauteuil','Lit','Matelas','Sommier','Alèse','Armoire','Commode','Bureau','Miroir','Rideaux','Store vénitien','Tringle','Lampadaire','Suspension','Lustre','Frigo-congélateur','Four','Micro-ondes','Plaque vitro','Plaque induction','Hotte','Lave-linge','Bouilloire','Grille-pain','Machine à café','Aspirateur','Fer à repasser','Planche à repasser','Sèche-cheveux','Vaisselle','Poubelle','Étendoir','Table de jardin','Chaise de jardin'];
+const uid=()=>'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const clone=o=>JSON.parse(JSON.stringify(o));
+const GRILLE_BASE = [{"cat":"Taux Horaire","lib":"Menues réparations (1 heure)","prix":43.56,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Taux Horaire","lib":"Moyennes réparations (2 heures)","prix":87.12,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Taux Horaire","lib":"Grosses réparations (4 heures)","prix":174.24,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Taux Horaire","lib":"Forfait horaire espaces verts (1 heure)","prix":34.09,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement porte intérieure complète","prix":357.72,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement paumelle porte intérieure","prix":24.42,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Mise en peinture porte","prix":136.4,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement ensemble coulissant Hauteur > 2 mètres et Largeur < 1,50 mètre","prix":350.02,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement ensemble coulissant Hauteur > 2 mètres et Largeur > 1,50 mètre","prix":414.92,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement ensemble coulissant Hauteur < 2 mètres et Largeur > 1,50 mètre","prix":323.4,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement ensemble coulissant Hauteur < 2 mètres et Largeur < 1,50 mètre","prix":262.9,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement portail ou portillon acier","prix":1197.9,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement joint","prix":69.74,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement joint porte fenêtre","prix":138.16,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement fenêtre aluminium prix 605 € par m²","prix":605.0,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Menuiserie","lib":"Remplacement fenêtre bois prix 566,5 € par m²","prix":566.5,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Menuiserie","lib":"Remplacement fenêtre PVC prix 453,2 € par m²","prix":453.2,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Menuiserie","lib":"Remplacement porte fenêtre aluminium prix 630,3 € par m²","prix":630.3,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Menuiserie","lib":"Remplacement porte fenêtre bois prix 591,8 € par m²","prix":591.8,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Menuiserie","lib":"Remplacement porte fenêtre PVC prix","prix":472.63,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement fenêtre de toit et accessoires","prix":756.36,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement rideau occultant fenêtre de toit","prix":118.36,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement canne velux","prix":43.78,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement volet aluminium","prix":1120.21,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement volet bois","prix":1050.23,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement volet PVC","prix":840.18,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement manivelle","prix":53.57,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement enrouleur","prix":98.12,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement divers quincaillerie (arrêt de volet, bloc manivelle…)","prix":54.56,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement volet roulant complet électrique","prix":840.18,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement moteur volet roulant","prix":328.46,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement commande électrique (inter, bouton)","prix":54.78,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement treuil","prix":113.52,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Remplacement lame de volet (prix unitaire)","prix":95.92,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Menuiserie","lib":"Vitrerie (uniquement pour l'état des lieux de sortie) Remplacement simple vitrage (le m² de surface murale)","prix":114.62,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Menuiserie","lib":"Remplacement verre cathédrale (le m² de surface murale)","prix":157.08,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Menuiserie","lib":"Remplacement verre armé (le m² de surface murale)","prix":130.02,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Menuiserie","lib":"Remplacement double vitrage m² y compris avec gaz (le m² de surface murale)","prix":158.62,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Menuiserie","lib":"Remplacement plexiglass (le m² de surface murale)","prix":158.62,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Menuiserie","lib":"Remplacement pare-close (le mètre linéaire)","prix":89.17,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"ml"},{"cat":"Serrurerie","lib":"Remplacement boîte à lettres pavillon","prix":69.04,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement serrure boîte à lettres simple","prix":27.94,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement serrure boîte à lettres PTT individuelle","prix":44.23,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement poignée de fenêtre","prix":25.65,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement ensemble de porte","prix":32.78,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement cylindre","prix":25.37,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement judas optique","prix":25.74,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement crémone complète","prix":81.84,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement crémone porte fenêtre","prix":120.12,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement quincaillerie porte fenêtre (poignée, entrée air, etc ...)","prix":31.68,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement serrure simple (appartement)","prix":23.65,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement serrure à condamnation (WC et salle de bain)","prix":23.87,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement serrure à cylindre (porte d'entrée)","prix":33.0,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement serrure 3 points en applique","prix":150.92,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement serrure 4 points en applique","prix":176.22,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement pieds de boîte à lettres","prix":91.74,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement poignée verrou garage","prix":34.43,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement quincaillerie porte garage (poignée+serrure)","prix":142.34,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement self-park (barrière de parking)","prix":234.08,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement porte de garage (fixations, silicone)","prix":788.48,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Serrurerie","lib":"Remplacement grillage souple <= 25 mètres linéaires","prix":347.16,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"ml"},{"cat":"Serrurerie","lib":"Remplacement grillage souple > 25 mètres linéaires","prix":694.32,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"ml"},{"cat":"Serrurerie","lib":"Remplacement grillage rigide par panneau","prix":163.68,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Forfait par remplacement appareillage applique supplémentaire","prix":20.2,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Forfait par remplacement appareillage encastré supplémentaire","prix":17.66,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Sonnerie/Sonnette (modulaire)","prix":46.2,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement carillon à piles","prix":65.3,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Douille E27","prix":24.3,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Forfait par remplacement de douille E27 supplémentaire","prix":6.15,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Douille DCL avec fiche 2p + terre (pour les nouvelles réhabilitations)","prix":24.48,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Forfait par remplacement de Douille DCL avec fiche 2p + terre supplémentaire","prix":6.33,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Réglette","prix":46.88,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement réglette avec transfo inter et prise classe E","prix":73.08,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Prise spéciale réseau câblé","prix":31.42,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Thermostat d'ambiance","prix":86.68,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Convecteurs de 0 à 2000 Watts","prix":95.26,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Panneau rayonnant radiant de 0 à 2000 Watts","prix":179.08,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Ampoule led basse consommation","prix":24.3,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Ampoule led basse consommation supplémentaire","prix":3.39,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Tube linolite","prix":30.73,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Poste intérieur interphone simple","prix":47.41,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Poste intérieur visiophone","prix":162.58,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Badge","prix":38.23,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Badge portail","prix":38.23,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Télécommande","prix":76.48,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Détecteur de fumée","prix":44.41,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Détecteur de fumée pour personne malentendante","prix":240.68,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement Pile 9V 6LR61","prix":23.32,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Electricité","lib":"Remplacement d'un boitier Elax","prix":517.0,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement complet évier inox 1 bac/2bacs (robinetterie+vidage+raccords PVC)","prix":202.83,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement évier inox 1 bac","prix":147.7,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement évier inox 2 bacs","prix":115.47,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement évier en résine 1 bac","prix":177.96,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement évier en résine 2 bacs","prix":167.4,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Mitigeur évier","prix":48.04,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Vidange évier (siphon+raccords PVC)","prix":38.17,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Meuble évier petit modèle (80, 90, 100)","prix":180.62,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Meuble évier grand modèle (120)","prix":189.81,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement complet Lavabo (colonne+mitigeur +siphon+raccords pvc)","prix":196.68,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Lavabo","prix":89.65,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Mitigeur lavabo","prix":61.44,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Vidange lavabo (siphon + raccords PVC)","prix":37.07,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Colonne lavabo","prix":38.67,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement complet Lave main (robinetterie,siphon+fixations, raccords Pvc)","prix":202.51,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Lave mains","prix":97.46,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement complet Baignoire (robinetterie+vidage+raccords PVC)","prix":384.74,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Baignoire (hors matériaux de synthèse)","prix":250.36,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement baignoire en matériau de synthèse petit modèle","prix":317.46,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement baignoire en matériau de synthèse grand modèle","prix":317.46,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Mitigeur/bain douche","prix":81.94,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Vidange baignoire","prix":58.19,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Panneau d'habillage baignoire mélaminés","prix":135.65,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement complet bac à douche","prix":408.58,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Mitigeur douche","prix":48.88,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Mitigeur douche thermostatique","prix":120.1,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Vidange (bonde)","prix":70.43,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Parois de douche dimension 70","prix":409.05,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Parois de douche dimension 80","prix":432.72,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement cabine de douche (80 / 80 centimètres)","prix":941.49,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement siège de douche relevable","prix":149.91,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement kit Barre de maintien douche (mur plein & placoplâtre)","prix":58.56,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement évacuation machine à laver + alimentation","prix":89.79,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement ballon d'eau chaude mural","prix":444.03,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement ballon d'eau chaude sol","prix":610.12,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement ballon d'eau chaude sur trépied","prix":492.6,"V":10.0,"F":2.0,"A":10.0,"R":20.0,"DQPR":5.0,"VT":15.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement complet WC (Cuvette+réservoir et fixations et accessoires)","prix":261.43,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Cuvette","prix":121.11,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Réservoir","prix":139.1,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Robinet d'arrêt WC","prix":23.31,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement mécanisme WC + robinet flotteur","prix":60.62,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Abattant WC","prix":28.19,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Economiseur d'eau aérateur mâle ou femelle","prix":23.09,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Forfait remplacement économiseur d'eau aérateur mâle ou femelle supplémentaire","prix":4.94,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Forfait remplacement bouchon à chainette","prix":13.64,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Robinet machine à laver","prix":23.29,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Robinet de puisage","prix":29.47,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Robinet de gaz","prix":36.83,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Bouchon gaz","prix":23.29,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Flexible inox gaz + robinet ROAI","prix":77.08,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement Flexible 15/21 pour douche 1,50 mètre linéaire + pomme de douche","prix":31.79,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"ml"},{"cat":"Plomberie","lib":"Remplacement Ensemble douche chromé barre + flexible + douchette","prix":47.06,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement bouche de VMC (bouche + platine)","prix":43.92,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement d'un compteur d'eau froide","prix":151.09,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement d'un compteur d'eau chaude","prix":151.09,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement d'un compteur de calories","prix":176.92,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement d'un répartiteur de frais de chauffage (1 radiateur)","prix":65.22,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement de 2 répartiteurs de frais de chauffage (2 radiateurs)","prix":130.43,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement de 3 répartiteurs de frais de chauffage (3 radiateurs)","prix":195.65,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement de 4 répartiteurs de frais de chauffage (4 radiateurs)","prix":260.86,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Plomberie","lib":"Remplacement de 5 répartiteurs de frais de chauffage (5 radiateurs)","prix":326.08,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cellier - Pièce complète - Travaux peinture","prix":329.05,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cellier - Pièce complète - Travaux peinture et tapisserie","prix":364.65,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cellier - Pièce complète - Travaux toile de verre et peinture","prix":473.96,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cellier - Pièce complète - Travaux de peinture satinée sur toile de verre existante","prix":283.87,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cellier - Plafond - Travaux peinture","prix":43.65,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cellier - Plafond - Travaux toile de verre et peinture","prix":70.53,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cellier - Plinthes - Travaux peinture","prix":27.94,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Chambre - Pièce complète - Travaux peinture","prix":566.39,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Chambre - Pièce complète - Travaux peinture et tapisserie","prix":643.5,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Chambre - Pièce complète - Travaux toile de verre et peinture","prix":873.62,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Chambre - Pièce complète - Travaux de peinture satinée sur toile de verre existante","prix":500.94,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Chambre - Plafond - Travaux peinture","prix":139.3,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Chambre - Plafond - Travaux toile de verre et peinture","prix":235.11,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Chambre - Plinthes - Travaux peinture","prix":55.88,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cuisine - Pièce complète - Travaux peinture","prix":575.1,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cuisine - Pièce complète - Travaux toile de verre et peinture","prix":772.51,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cuisine - Pièce complète - Travaux de peinture satinée sur toile de verre existante","prix":484.22,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cuisine - Plafond - Travaux peinture","prix":119.89,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cuisine - Plafond - Travaux toile de verre et peinture","prix":188.09,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Cuisine - Plinthes - Travaux peinture","prix":46.57,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Entrée / dégagement / Escalier - Pièce complète - Travaux peinture","prix":471.99,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Entrée / dégagement / Escalier - Pièce complète - Travaux peinture et tapisserie","prix":536.25,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Entrée / dégagement / Escalier - Pièce complète - Travaux toile de verre et peinture","prix":728.01,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Entrée / dégagement - Plafond - Travaux peinture","prix":55.72,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Entrée / dégagement - Plafond - Travaux toile de verre et peinture","prix":94.04,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Entrée / dégagement - Plinthes - Travaux peinture","prix":27.94,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Placard / rangement - Pièce complète - Travaux peinture","prix":283.2,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Placard / rangement - Pièce complète - Travaux peinture et tapisserie","prix":321.75,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Placard / rangement - Pièce complète - Travaux toile de verre et peinture","prix":436.81,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Salle de bain - Pièce complète - Travaux peinture","prix":376.79,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Salle de bain- Pièce complète - Travaux toile de verre et peinture pièce sèche","prix":506.13,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Salle de bain - Plafond - Travaux peinture","prix":59.94,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Salle de bain - Plafond - Travaux toile de verre et peinture","prix":94.04,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Salle de bain - Plinthes - Travaux peinture","prix":32.6,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Salon / Séjour - Pièce complète - Travaux peinture","prix":755.18,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Salon / Séjour - Pièce complète - Travaux peinture et tapisserie","prix":858.0,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Salon / Séjour - Pièce complète - Travaux toile de verre et peinture","prix":1164.82,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Salon / Séjour - Plafond - Travaux peinture","prix":264.66,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Salon / Séjour - Plafond - Travaux toile de verre et peinture","prix":446.7,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Salon / Séjour - Plinthes - Travaux peinture","prix":74.51,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"WC - Pièce complète - Travaux peinture","prix":237.97,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"WC - Pièce complète - Travaux toile de verre et peinture pièce sèche","prix":319.66,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"WC - Pièce complète - Travaux de peinture satinée sur toile de verre existante","prix":200.38,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"WC - Plafond - Travaux peinture","prix":14.99,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"WC - Plafond - Travaux toile de verre et peinture","prix":23.51,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"WC - Plinthes - Travaux peinture","prix":13.97,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Rebouchage murs (trous, chevilles,…) - Forfait à l'unité","prix":15.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Enlèvement de stickers - Forfait à l'unité","prix":20.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Réfection faïences dosseret lavabo salle de bain (dépose et pose)","prix":245.63,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Réfection faïences baignoire (dépose et pose)","prix":1522.41,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Réfection faïences évier cuisine (dépose et pose)","prix":637.11,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Réfection peinture boiserie / ferronnerie <= 10 m² (surface murale)","prix":230.27,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Réfection peinture boiserie / ferronnerie > 10 m² (surface murale)","prix":460.56,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Butée de porte","prix":11.99,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"u"},{"cat":"Peinture - Tapisserie - Sols","lib":"Réfection dalles (sol) <= 5 m² - Pièce sèche","prix":239.25,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Au-delà de 5 m² réfection dalles (sol) : prix 93,4 € par m² - Pièce sèche","prix":93.4,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Réfection lés (sol) <= 5 m² - Pièce sèche","prix":254.6,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Au-delà de 5 m² réfection lés (sol) : prix","prix":103.63,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Réfection dalles (sol) <= 5 m² - Pièce humide","prix":239.25,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Au-delà de 5 m² réfection dalles (sol) : prix 93,4 € par m- Pièce humide²","prix":93.4,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Réfection lés (sol) <= 5 m² - Pièce humide","prix":254.6,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Au-delà de 5 m² réfection lés (sol) : prix","prix":103.63,"V":7.0,"F":2.0,"A":16.0,"R":20.0,"DQPR":3.0,"VT":10.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Réfection carrelage <= 5m²","prix":281.69,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Au-delà de 5 m² réfection carrelage : prix","prix":116.95,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Réfection parquet <= 5m²","prix":491.12,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Au-delà de 5 m² réfection parquet : prix 163,7 € par m²","prix":163.7,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Réfection joints (carrelage / parquet / faïence) <= 5 m²","prix":109.41,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Au-delà de 5 m² réfection joint (carrelage...) : prix","prix":22.01,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Remplacement plinthe bois <= 5 mètres linéaires","prix":94.44,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"ml"},{"cat":"Peinture - Tapisserie - Sols","lib":"Remplacement plinthe bois > 5 mètres linéaires","prix":188.87,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"ml"},{"cat":"Peinture - Tapisserie - Sols","lib":"Remplacement plinthe carrelage <= 5 mètres linéaires (prix pièce à l'unité)","prix":180.95,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"ml"},{"cat":"Peinture - Tapisserie - Sols","lib":"Remplacement plinthe carrelage > 5 mètres linéaires (prix pièce à l'unité)","prix":355.19,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"ml"},{"cat":"Peinture - Tapisserie - Sols","lib":"Dépose revêtement sol <= 5 m²","prix":87.12,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Dépose revêtement sol pièce complète <= 20 m²","prix":217.8,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Peinture - Tapisserie - Sols","lib":"Dépose revêtement sol pièce complète > 20 m²","prix":435.6,"V":20.0,"F":5.0,"A":5.0,"R":25.0,"DQPR":10.0,"VT":30.0,"unit":"m²"},{"cat":"Nettoyage","lib":"Forfait nettoyage T1","prix":132.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait nettoyage T2","prix":165.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait nettoyage T3","prix":198.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait nettoyage T4","prix":231.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait nettoyage T5","prix":264.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait nettoyage T6 et plus","prix":297.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait nettoyage vitres de fenêtres 2 faces","prix":3.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait nettoyage Cuisine","prix":67.3,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait nettoyage SDB / Salle d'eau","prix":56.16,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait nettoyage WC","prix":28.08,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Lessivage des murs <= 20 m² par pièce","prix":83.78,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Nettoyage","lib":"Lessivage des murs > 20 m² par pièce","prix":111.7,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Nettoyage","lib":"Forfait désinfection T1","prix":67.87,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait désinfection T2","prix":74.58,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait désinfection T3","prix":81.4,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait désinfection T4","prix":88.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait désinfection T5","prix":94.88,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Nettoyage","lib":"Forfait désinfection T6","prix":101.64,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Taille petit jardin (jusqu'à 12 arbustes)","prix":68.18,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Taille grand jardin (plus de 24 arbustes)","prix":136.37,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Taille grand jardin (plus de 36 arbustes)","prix":204.55,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Taille de haies 3 faces jusqu’à 20 ml, jusqu'à 2 m de haut","prix":170.46,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"ml"},{"cat":"Espaces verts","lib":"Taille de haies 3 faces jusqu’à 40 ml, jusqu'à 2 m de haut","prix":306.83,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"ml"},{"cat":"Espaces verts","lib":"Taille de reprise de haies grande hauteur (sup 2 m) jusqu’à 20 ml","prix":238.64,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"ml"},{"cat":"Espaces verts","lib":"Taille de reprise de haies grande hauteur (sup 2 m) jusqu’à 40 ml","prix":409.1,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"ml"},{"cat":"Espaces verts","lib":"Tonte petit jardin <= 125 m²","prix":34.09,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Espaces verts","lib":"Tonte grand jardin <= 250 m²","prix":68.18,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Espaces verts","lib":"Tonte grand jardin <= 500 m²","prix":102.28,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Espaces verts","lib":"Majoration pour taille de haie en pente > 20 % ou encombré","prix":79.9,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Abattage accessible Ø 20cm","prix":156.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Abattage accessible Ø 21 à 40 cm","prix":276.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Abattage accessible Ø 41 à 60 cm","prix":416.4,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Abattage encombré Ø 20cm","prix":186.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Abattage encombré Ø 21 à 40 cm","prix":312.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Abattage encombré Ø 41 à 60 cm","prix":483.6,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Evacuation des résidus de taille et d'élagage M3","prix":60.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Elagage forfait par arbre (hauteur jusqu'à 5 m)","prix":192.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Elagage forfait par arbre (hauteur jusqu’à 10 m)","prix":252.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Ré engazonnement petit jardin 50 m²","prix":150.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Espaces verts","lib":"Ré engazonnement petit jardin 100 m²","prix":300.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Espaces verts","lib":"Ré engazonnement jardin 250 m²","prix":720.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Espaces verts","lib":"Apport de terre végétale : prix à la tonne","prix":60.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Gravillon pour cour : prix à la tonne","prix":60.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"u"},{"cat":"Espaces verts","lib":"Désherbage binage, manuel, propreté 25 m²","prix":39.95,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Espaces verts","lib":"Désherbage binage, manuel, propreté 50 m²","prix":79.9,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Espaces verts","lib":"Désherbage binage, manuel, propreté 75 m²","prix":119.84,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Espaces verts","lib":"Désherbage binage, manuel, propreté 100m²","prix":159.79,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Espaces verts","lib":"Arrachage haie + 2 m de haut / 20ML","prix":480.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"ml"},{"cat":"Espaces verts","lib":"Arrachage haie - 2 m de haut /20 ML","prix":432.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"ml"},{"cat":"Espaces verts","lib":"Débroussaillage, propreté jardin 50 m²","prix":18.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Espaces verts","lib":"Débroussaillage, propreté jardin 100 m²","prix":36.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"},{"cat":"Espaces verts","lib":"Débroussaillage, propreté jardin 150m²","prix":54.0,"V":null,"F":null,"A":null,"R":null,"DQPR":null,"VT":null,"unit":"m²"}];
+let GRILLE = GRILLE_BASE.map(function(x){return Object.assign({},x)});
+function loadGrille(){
+  try{
+    const raw=localStorage.getItem('edl1grille');
+    if(raw){const j=JSON.parse(raw);if(Array.isArray(j)&&j.length){GRILLE=j.map(function(x){return Object.assign({},x)});return}}
+  }catch(e){}
+  GRILLE=GRILLE_BASE.map(function(x){return Object.assign({},x)});
+}
+function saveGrille(){
+  try{localStorage.setItem('edl1grille',JSON.stringify(GRILLE));msg('Catalogue enregistré')}catch(e){msg('Catalogue : sauvegarde impossible')}
+}
+loadGrille();
+
+/* ===== CHIFFRAGE (grille 2026 + vétusté) ===== */
+const ETAT_FRACTION={NF:0,BE:1/3,EU:2/3};
+function ageFromEtat(item,etat){if(!item||item.V==null)return 0;return item.V*(ETAT_FRACTION[etat]??0)}
+function occYearsFromS(){
+  const dEnt=S.v.dent||(S.baseline&&S.baseline.v&&S.baseline.v.date)||'';
+  const dSor=S.v.date||'';
+  if(!dEnt||!dSor)return 0;
+  const d1=new Date(dEnt),d2=new Date(dSor);
+  if(isNaN(d1)||isNaN(d2)||d2<d1)return 0;
+  let months=(d2.getFullYear()-d1.getFullYear())*12+(d2.getMonth()-d1.getMonth());
+  if(d2.getDate()<d1.getDate())months-=1;
+  return Math.max(0,months)/12;
+}
+function occPartsFromS(){
+  const y=occYearsFromS();
+  const totalM=Math.round(y*12);
+  return {years:Math.floor(totalM/12),months:totalM%12};
+}
+function fmtEuro(n){return (n??0).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'}
+function computeShare(item,age){
+  if(!item||item.V==null||item.F==null||item.A==null||item.R==null)return 100;
+  if(age<=item.F)return 100;
+  if(age<=item.V){let share=100-(age-item.F)*item.A;return Math.max(share,item.R)}
+  return item.R;
+}
+function computeCoef(item,etat,typeT){
+  if(typeT===1)return 1;
+  if(!item||item.V==null)return 1;
+  const age0=ageFromEtat(item,etat);
+  const age=age0+occYearsFromS();
+  const share=computeShare(item,age);
+  return Math.round((share/100)*1000)/1000;
+}
+const EXACT_MAP={
+  'Murs':['Murs - Travaux peinture','Pièce complète - Travaux peinture','Travaux toile de verre et peinture'],
+  'Plafond':['Salon / Séjour - Plafond - Travaux peinture','Chambre - Plafond','Cuisine - Plafond','Entrée - Plafond','Plafond - Travaux peinture'],
+  'Sol':['Réfection carrelage <= 5','Réfection parquet <= 5','Réfection dalles (sol) <= 5','Réfection lés (sol) <= 5'],
+  'Plinthes':['Remplacement plinthe','Plinthes - Travaux peinture'],
+  'Plinthe':['Remplacement plinthe','Plinthes - Travaux peinture'],
+  'Porte d’accès':['Remplacement porte intérieure complète','Mise en peinture porte','Remplacement serrure'],
+  'Porte palière':['Remplacement porte intérieure complète','Remplacement serrure à cylindre','Mise en peinture porte'],
+  'Serrure':['Remplacement serrure simple','Remplacement serrure à cylindre','Remplacement cylindre','Remplacement serrure 3 points'],
+  'Serrure / verrou':['Remplacement serrure simple','Remplacement serrure à cylindre','Remplacement cylindre'],
+  'Verrou':['Remplacement serrure','Remplacement cylindre'],
+  'Ouvertures':['Remplacement fenêtre','Remplacement double vitrage','Remplacement porte fenêtre'],
+  'Volets':['Remplacement volet','Remplacement volet roulant','Remplacement moteur volet','Remplacement manivelle'],
+  'Éclairage':['Remplacement Ampoule led basse consommation','Remplacement Douille E27','Remplacement Réglette'],
+  'Prises':['Forfait par remplacement appareillage encastré','Forfait par remplacement appareillage applique'],
+  'Chauffage':['Remplacement Convecteurs','Remplacement Panneau rayonnant','Remplacement Thermostat'],
+  'Évier':['Remplacement complet évier','Remplacement évier inox 1 bac','Remplacement évier inox 2 bacs','Remplacement évier en résine'],
+  'Mélangeur':['Remplacement Mitigeur'],
+  'Robinets':['Remplacement Mitigeur'],
+  'Siphon':['Remplacement Vidange','siphon'],
+  'Joint silicone':['Remplacement joint'],
+  'Ventilation':['VMC'],
+  'Miroir':['miroir'],
+  'Pare-douche':['pare-douche','douche'],
+  'Porte-douchette':['douchette','douche'],
+  'Porte-serviette':['porte-serviette'],
+  'Faïence':['Réfection faïences','faïence'],
+  'Crédence':['Réfection faïences évier','faïence'],
+  'Plan de travail':['plan de travail'],
+  'Placards':['placard'],
+  'Placard sous évier':['Meuble évier'],
+  'Placard sous lavabo':['Meuble'],
+  'Baignoire':['Remplacement complet Baignoire','Remplacement Baignoire','Remplacement Mitigeur/bain'],
+  'Douche':['Remplacement complet bac à douche','Remplacement Mitigeur douche'],
+  'Lavabo':['Remplacement complet Lavabo','Remplacement Lavabo'],
+  'Lave-main':['Remplacement complet Lave main','Remplacement Lave mains'],
+  'WC':['wc','cuvette','abattant','chasse'],
+  'Réservoir':['chasse','réservoir','wc'],
+  'Cuvette':['cuvette','wc'],
+  'Abattant':['abattant'],
+  'Robinet de chasse':['chasse'],
+  'Interphone / visiophone':['interphone','visiophone'],
+  'Sonnette':['Sonnerie','Sonnette','carillon'],
+  'Judas':['judas'],
+  'Boîte à lettres':['boîte à lettres'],
+  'Porte de garage':['porte de garage'],
+  'Garde-corps':['garde-corps'],
+  'Nettoyage général':['Forfait nettoyage']
+};
+const MAP_KW=[
+  [/trous? de chevilles?|trch|rebouch/i,['Rebouchage murs']],
+  [/\bmurs?\b|\bpeint|crépi|papier peint|toile de verre/i,['Travaux peinture','toile de verre','peinture']],
+  [/\bplafond/i,['Plafond','Travaux peinture']],
+  [/\bsols?\b|carrelage|parquet|lino|pvc|dalles?|lés\b/i,['carrelage','parquet','lés','dalles','revêtement sol']],
+  [/\bplinthes?\b/i,['plinthe']],
+  [/porte d.accès|porte palière|porte intérieure/i,['porte intérieure','Mise en peinture porte','serrure']],
+  [/\bserrure|\bverrou|\bcylindre|\bloquet/i,['serrure','cylindre']],
+  [/\bvolets?\b|roulant/i,['volet','volet roulant','moteur volet','manivelle']],
+  [/fenêtre|baie|ouverture|vitrage|p\.fen/i,['fenêtre','vitrage','double vitrage','porte fenêtre']],
+  [/\bprises?\b|interrupteur|appareillage/i,['appareillage','prise']],
+  [/éclairage|ampoule|plafonnier|applique|douille|néon/i,['Ampoule','Douille','Réglette']],
+  [/robinet|mitigeur|mélangeur/i,['Mitigeur']],
+  [/\bévier\b/i,['évier','Mitigeur évier']],
+  [/siphon|bonde|vidange/i,['Vidange','siphon']],
+  [/joint silicone|\bjoints?\b/i,['joint']],
+  [/\blavabo\b/i,['Lavabo','Mitigeur lavabo']],
+  [/lave-?main/i,['Lave main','Lave mains']],
+  [/\bbaignoire\b/i,['Baignoire','Mitigeur/bain']],
+  [/\bdouche\b|pare-douche|douchette/i,['douche','Mitigeur douche','bac à douche']],
+  [/\bwc\b|cuvette|abattant|réservoir|chasse/i,['wc','cuvette','abattant','chasse']],
+  [/chauffage|radiateur|convecteur|sèche-serviette/i,['Convecteurs','Panneau rayonnant','Thermostat']],
+  [/ventilation|vmc|autogyre/i,['ventilation','VMC']],
+  [/faïence|crédence/i,['faïence']],
+  [/\bmiroir\b/i,['miroir']],
+  [/interphone|visiophone/i,['interphone','visiophone']],
+  [/sonnette|sonnerie|carillon/i,['Sonnerie','Sonnette','carillon']],
+  [/boîte à lettres/i,['boîte à lettres']],
+  [/porte de garage/i,['porte de garage']],
+  [/nettoyage|lessivage|désinfection/i,['nettoyage','lessivage']],
+  [/clé|badge|émetteur|télécommande/i,['badge','télécommande']],
+  [/placard/i,['Meuble','placard']],
+  [/plan de travail/i,['plan de travail']]
+];
+function suggestCatalog(name,obs,flag1,flag2,roomLabel){
+  const q=(name+' '+(obs||'')+' '+(roomLabel||'')).toLowerCase();
+  const rn=(roomLabel||'').toLowerCase();
+  const scored=GRILLE.map(item=>{
+    const lib=item.lib.toLowerCase();
+    const cat=(item.cat||'').toLowerCase();
+    let sc=0;
+    const exact=EXACT_MAP[name];
+    if(exact){
+      exact.forEach(kw=>{
+        const k=kw.toLowerCase();
+        if(lib.includes(k))sc+=10;
+      });
+    }
+    for(const pair of MAP_KW){
+      if(pair[0].test(q)){
+        pair[1].forEach(k=>{if(lib.includes(k.toLowerCase()))sc+=3});
+      }
+    }
+    name.toLowerCase().split(/[\s\/\-',']+/).forEach(w=>{
+      if(w.length>3&&lib.includes(w))sc+=2;
+    });
+    // Room-aware peinture / sols
+    if(cat.includes('peinture')||cat.includes('sols')){
+      if(/(salon|séjour)/.test(rn)&&/salon|séjour/.test(lib))sc+=6;
+      if(/chambre/.test(rn)&&/chambre/.test(lib))sc+=6;
+      if(/cuisine/.test(rn)&&/cuisine/.test(lib))sc+=6;
+      if(/entrée|dégagement/.test(rn)&&/entrée|dégagement|cellier/.test(lib))sc+=6;
+      if(/bain|sdb|eau/.test(rn)&&/(bain|eau|sdb)/.test(lib))sc+=6;
+      if(/\bwc\b/.test(rn)&&/\bwc\b/.test(lib))sc+=6;
+      // generic "pièce complète" as moderate fallback
+      if(/pièce complète/.test(lib))sc+=2;
+    }
+    // Boost "complet" replacements for equipment
+    if(/complet/.test(lib)&&exact)sc+=4;
+    if(/remplacement complet/.test(lib))sc+=3;
+    // Penalize "supplémentaire" and pure dépose as primary match
+    if(/supplémentaire/.test(lib))sc-=5;
+    if(/^dépose /.test(lib))sc-=3;
+    if(/au-delà de 5/.test(lib))sc-=4;
+    // Nettoyage preference
+    if(flag2&&!flag1&&cat.includes('nettoyage'))sc+=6;
+    if(flag1&&cat.includes('taux horaire'))sc+=1;
+    // Don't let rebouchage win for generic "Murs" état degradation
+    if(/rebouchage/.test(lib)&&!/trch|trous|chevilles/.test(q))sc-=8;
+    return {item,sc};
+  }).filter(x=>x.sc>0).sort((a,b)=>b.sc-a.sc||a.item.prix-b.item.prix);
+  return scored.slice(0,8).map(x=>x.item);
+}
+const REBOUCHAGE=()=>GRILLE.find(g=>g.lib&&g.lib.indexOf('Rebouchage murs')===0)||GRILLE.find(g=>/Rebouchage murs/.test(g.lib));
+function trchDiffFor(sk){
+  // sk is state key ending with 's' (e.g. r1.t0s) or full key
+  if(!sk||typeof sk!=='string')return 0;
+  const base=sk.endsWith('s')&&!sk.endsWith('ss')?sk.slice(0,-1):sk;
+  // avoid inventaire/clés fake keys
+  if(base.indexOf('qtydeg')>=0||base.indexOf('iv')===0&&base.indexOf('.')>0)return 0;
+  const bv=(S.baseline&&S.baseline.v)||{};
+  const t1=parseInt(bv[base+'t'])||0;
+  const t2=parseInt(S.v[base+'t'])||0;
+  return Math.max(0,t2-t1);
+}
+function collectTrchLines(){
+  // Scan all room elements for TrCh increase even without état change
+  if(!S.baseline)return [];
+  const bv=S.baseline.v||{};
+  const out=[];
+  S.rooms.forEach(r=>{
+    const ex=S.x[r.id]||[];
+    const defs=TPL[r.t]?TPL[r.t].i:[];
+    defs.forEach((x,i)=>{
+      const k=r.id+'.t'+i;
+      const t1=parseInt(bv[k+'t'])||0,t2=parseInt(S.v[k+'t'])||0;
+      const d=t2-t1;
+      if(d>0)out.push({roomLabel:r.n,name:x[0],qty:d,sk:k+'s'});
+    });
+    ex.forEach(e=>{
+      const k=r.id+'.'+e.id;
+      const t1=parseInt(bv[k+'t'])||0,t2=parseInt(S.v[k+'t'])||0;
+      const d=t2-t1;
+      if(d>0)out.push({roomLabel:r.n,name:e.n,qty:d,sk:k+'s'});
+    });
+  });
+  return out;
+}
+function ensureChif(){
+  if(!S.chif)S.chif={rooms:[],nextRoomId:1,nextLineId:1};
+  if(!Array.isArray(S.chif.rooms))S.chif.rooms=[];
+  if(!S.chif.nextRoomId)S.chif.nextRoomId=1;
+  if(!S.chif.nextLineId)S.chif.nextLineId=1;
+}
+function pickNettoyageTier(){
+  const raw=(S.v.typ||'').toString().trim().toUpperCase();
+  // Explicit T1…T6 or F1…F6 in the type field
+  let m=raw.match(/\b[TF]([1-6])\b/);
+  if(m)return 'T'+m[1];
+  // "T6 et plus", "T6+", "6 pièces", etc.
+  if(/\bT\s*6\b|\b6\s*\+|ET\s*PLUS/.test(raw))return 'T6';
+  if(/\bSTUDIO\b|\bT0\b|\bF0\b/.test(raw))return 'T1';
+  // Number of pieces written as "3 pièces" / "type 4"
+  m=raw.match(/\b([1-6])\s*(PI[EÈ]CES?|P\b)/);
+  if(m)return 'T'+m[1];
+  m=raw.match(/\bTYPE\s*([1-6])\b/);
+  if(m)return 'T'+m[1];
+  // Fallback: count main rooms (exclude WC; count SDB as room)
+  const n=S.rooms.filter(r=>{
+    const t=r.t||'', name=(r.n||'').toLowerCase();
+    if(t==='wc'||/\bwc\b/.test(name))return false;
+    return true;
+  }).length;
+  if(n<=1)return 'T1';
+  if(n===2)return 'T2';
+  if(n===3)return 'T3';
+  if(n===4)return 'T4';
+  if(n===5)return 'T5';
+  return 'T6';
+}
+function chifAutoFill(){
+  ensureChif();
+  // Uniquement les postes cochés « Imputable au locataire » dans le comparatif
+  const list=compareList().filter(x=>x.status==='deg'&&!!S.v[x.sk+'imp']);
+  if(!list.length){msg('Aucun poste imputable coché dans le comparatif');return}
+  const byRoom={};
+  const pushRoom=(rn,fn)=>{
+    if(!byRoom[rn])byRoom[rn]=[];
+    byRoom[rn].push(fn);
+  };
+  list.forEach(x=>{
+    // Nettoyage géré à part (forfait T1–T6) — éviter le doublon
+    if(x.sk==='netg_flag'||x.name==='État du nettoyage à la sortie'||x.roomLabel==='Nettoyage général')return;
+    const rn=x.roomLabel||'Divers';
+    pushRoom(rn,()=>{
+      let room=S.chif.rooms.find(r=>r.name===rn);
+      if(!room){room={id:S.chif.nextRoomId++,name:rn,lines:[]};S.chif.rooms.push(room)}
+      // TrCh → ligne rebouchage (qty = écart)
+      const td=(x.trchDiff!=null&&x.trchDiff>0)?x.trchDiff:trchDiffFor(x.sk);
+      if(td>0){
+        const reb=REBOUCHAGE();
+        const srcTrch=(x.name||'')+' — TrCh +'+td;
+        if(!room.lines.some(l=>l.srcName===srcTrch)){
+          room.lines.push({
+            id:S.chif.nextLineId++,
+            lib:reb?reb.lib:"Rebouchage murs (trous, chevilles,…) - Forfait à l'unité",
+            qty:td,
+            unit:'u',
+            prix:reb?reb.prix:15,
+            etat:'BE',
+            coef:1,
+            typeT:1,
+            grille:reb||null,
+            srcName:srcTrch,
+            srcObs:'Trous de chevilles : '+(td)+' supplémentaire(s)',
+            suggestions:[]
+          });
+        }
+      }
+      // Dégradation d'état réelle (sévérité sortie > entrée) ?
+      const SEV={NF:0,BE:1,EU:2,ME:3,HS:4};
+      const etatDeg=!!(
+        (x.s1&&x.s2&&x.s1!==x.s2&&SEV[x.s1]!==undefined&&SEV[x.s2]!==undefined&&SEV[x.s2]>SEV[x.s1])||
+        (x.s2&&!x.s1&&SEV[x.s2]!==undefined&&SEV[x.s2]>=SEV.EU)
+      );
+      // Si seul le TrCh (+ éventuellement flags 1/2 sans baisse d'état) → pas de 2e ligne
+      // Les flags « à réparer / à nettoyer » sur un simple TrCh sont déjà couverts par le rebouchage
+      if(td>0&&!etatDeg)return;
+      // Sans TrCh : ligne générique seulement si baisse d'état ou flags
+      if(td<=0&&!etatDeg&&!x.flag1&&!x.flag2)return;
+      if(room.lines.some(l=>l.srcName===x.name&&!String(l.srcName).includes('TrCh')))return;
+      const etatEntree=(x.s1&&['NF','BE','EU'].includes(x.s1))?x.s1:'BE';
+      const typeT=(x.flag1||x.flag2)?1:2;
+      const suggestions=suggestCatalog(x.name,S.v[x.obsKey],x.flag1,x.flag2,x.roomLabel);
+      const best=suggestions[0]||null;
+      const coef=best?computeCoef(best,etatEntree,typeT):1;
+      room.lines.push({
+        id:S.chif.nextLineId++,
+        lib:best?best.lib:(x.name+(x.flag1?' — à réparer':'')+(x.flag2?' — à nettoyer':'')),
+        qty:1,
+        unit:best?(best.unit||'u'):'u',
+        prix:best?(best.prix||0):0,
+        etat:etatEntree,
+        coef:coef,
+        typeT:typeT,
+        grille:best,
+        srcName:x.name,
+        srcObs:S.v[x.obsKey]||'',
+        suggestions:suggestions.slice(0,6)
+      });
+    });
+  });
+  Object.keys(byRoom).forEach(rn=>byRoom[rn].forEach(fn=>fn()));
+  if((S.v.net==='Moyen'||S.v.net==='Médiocre')&&!!S.v['netg_flagimp']){
+    const netTitle='État du nettoyage à la sortie';
+    // Récupérer une éventuelle pièce créée sous l'ancien nom
+    let room=S.chif.rooms.find(r=>r.name===netTitle||r.name==='Nettoyage général');
+    if(room)room.name=netTitle;
+    else{room={id:S.chif.nextRoomId++,name:netTitle,lines:[]};S.chif.rooms.push(room)}
+    // Retirer d'éventuelles lignes génériques issues du comparatif (sans forfait T)
+    room.lines=room.lines.filter(l=>l.srcName===netTitle||l.srcName==='Nettoyage'||(l.lib&&/^Forfait nettoyage T[1-6]/.test(l.lib)));
+    if(!room.lines.some(l=>l.srcName===netTitle||l.srcName==='Nettoyage'||(l.lib&&/^Forfait nettoyage T[1-6]/.test(l.lib)))){
+      const netAll=GRILLE.filter(g=>/^Forfait nettoyage T[1-6]/.test(g.lib));
+      const pick=pickNettoyageTier();
+      const netItem=netAll.find(g=>g.lib.indexOf('Forfait nettoyage '+pick)===0)||netAll.find(g=>g.lib.includes('T3'))||netAll[0];
+      if(netItem){
+        room.lines.push({
+          id:S.chif.nextLineId++,
+          lib:netItem.lib,
+          qty:1,
+          unit:'u',
+          prix:netItem.prix,
+          etat:'BE',
+          coef:1,
+          typeT:1,
+          grille:netItem,
+          srcName:netTitle,
+          srcObs:(S.v.netgb||S.v.net||'')+(S.v.typ?' · Type log. : '+S.v.typ:''),
+          suggestions:netAll
+        });
+      }
+    }
+  }
+  msg('Chiffrage prérempli — vérifie chaque ligne (TrCh → rebouchage auto)');
+  render();
+}
+function chifRecalc(){
+  ensureChif();
+  S.chif.rooms.forEach(room=>{
+    room.lines.forEach(line=>{
+      line.coef=computeCoef(line.grille,line.etat,line.typeT);
+    });
+  });
+}
+function chifTotal(){
+  ensureChif();
+  let ttc=0;
+  S.chif.rooms.forEach(r=>r.lines.forEach(l=>{ttc+=l.qty*l.prix*l.coef}));
+  return ttc;
+}
+function renderChif(){
+  ensureChif();
+  const parts=occPartsFromS();
+  const occLabel=(S.v.dent||S.v.date)?(parts.years+' an(s) '+parts.months+' mois'):'— (renseigne date d’entrée + date de sortie)';
+  let h='<h2>Chiffrage – sortie</h2>';
+  h+='<p class="lg">Prérempli depuis le comparatif entrée/sortie. Grille forfaitaire 2026 · T=1 dégradation (100 %) · T=2 vétusté (coef. auto).</p>';
+  h+='<div class="it"><div class="g">';
+  h+='<div class="f"><span>Client</span><div style="color:var(--ink)">'+esc(S.v.client||'—')+'</div></div>';
+  h+='<div class="f"><span>Locataire sortant</span><div style="color:var(--ink)">'+esc(S.v.sor||'—')+'</div></div>';
+  h+='<div class="f"><span>N° RDV</span><div style="color:var(--ink)">'+esc(S.v.rdv||'—')+'</div></div>';
+  h+='<div class="f"><span>Adresse</span><div style="color:var(--ink)">'+esc(S.v.adr||'—')+'</div></div>';
+  h+='<div class="f"><span>Durée d’occupation</span><div style="color:var(--ink);font-weight:600">'+esc(occLabel)+'</div></div>';
+  h+='</div></div>';
+  h+='<div class="act">';
+  h+='<button class="btn p sm" data-act="chifAuto">Préremplir depuis le comparatif</button>';
+  h+='<button class="btn sm" data-act="chifRecalc">Recalculer les coef.</button>';
+  h+='<button class="btn sm" data-act="chifAddRoom">+ Pièce</button>';
+  h+='<button class="btn sm" data-act="chifAddLine">+ Ligne libre</button>';
+  h+='<button class="btn d sm" data-act="chifClear">Tout effacer</button>';
+  h+='</div>';
+  h+='<div class="it" style="margin-bottom:10px">';
+  h+='<label class="f">Recherche catalogue<input id="chifSearch" placeholder="ex. mitigeur, peinture, nettoyage…" data-chifsearch="1"></label>';
+  h+='<div id="chifCatResults" class="lg" style="max-height:160px;overflow:auto;margin-top:6px"></div>';
+  h+='</div>';
+  if(!S.chif.rooms.length){
+    h+='<p class="lg">Aucune ligne. Clique « Préremplir depuis le comparatif » ou ajoute une pièce.</p>';
+  }
+  S.chif.rooms.forEach(room=>{
+    h+='<div class="it"><div class="hd"><b><input style="font-weight:600;border:0;background:none;padding:2px;width:70%" data-chifroom="'+room.id+'" value="'+esc(room.name)+'"></b>';
+    h+='<button class="mini d" data-act="chifDelRoom" data-r="'+room.id+'" title="Supprimer pièce">×</button></div>';
+    if(!room.lines.length)h+='<p class="lg">Aucune ligne dans cette pièce.</p>';
+    room.lines.forEach(line=>{
+      const montant=line.qty*line.prix*line.coef;
+      const hasV=line.grille&&line.grille.V!=null&&line.typeT===2;
+      h+='<div class="it" style="margin:6px 0;padding:8px;border-left:3px solid var(--acc)">';
+      h+='<div class="hd"><b style="font-size:13px">'+esc(line.srcName||'')+'</b>';
+      h+='<button class="mini d" data-act="chifDelLine" data-r="'+room.id+'" data-id="'+line.id+'">×</button></div>';
+      if(line.srcObs)h+='<p class="lg">Obs. : '+esc(line.srcObs)+'</p>';
+      h+='<label class="f">Désignation catalogue<input data-chifline="'+room.id+'.'+line.id+'.lib" value="'+esc(line.lib)+'" placeholder="Taper pour chercher dans le catalogue…" autocomplete="off"></label>';
+      h+='<div class="row" style="margin:4px 0;flex-wrap:wrap" id="chif-sug-'+room.id+'-'+line.id+'">';
+      if(line.suggestions&&line.suggestions.length){
+        line.suggestions.forEach((s,i)=>{
+          const lab=s.lib.length>48?s.lib.slice(0,48)+'…':s.lib;
+          h+='<button class="btn sm" data-act="chifPick" data-r="'+room.id+'" data-id="'+line.id+'" data-si="'+i+'" style="font-size:11px;padding:4px 8px;margin:2px">'+esc(lab)+' · '+s.prix+'€</button>';
+        });
+      } else {
+        h+='<span class="lg">Tape dans la désignation pour afficher des suggestions catalogue</span>';
+      }
+      h+='</div>';
+      h+='<div class="g">';
+      h+='<label class="f">Qté<input type="number" min="0" step="1" inputmode="numeric" data-chifline="'+room.id+'.'+line.id+'.qty" value="'+esc(line.qty)+'"></label>';
+      h+='<label class="f">Unité<input data-chifline="'+room.id+'.'+line.id+'.unit" value="'+esc(line.unit)+'"></label>';
+      h+='<label class="f">Prix TTC<input type="number" min="0" step="0.01" inputmode="decimal" data-chifline="'+room.id+'.'+line.id+'.prix" value="'+esc(line.prix)+'"></label>';
+      if(hasV||line.typeT===2){
+        h+='<label class="f">État entrée<select data-chifline="'+room.id+'.'+line.id+'.etat">';
+        h+='<option value="NF"'+(line.etat==='NF'?' selected':'')+'>NF</option>';
+        h+='<option value="BE"'+(line.etat==='BE'?' selected':'')+'>BE</option>';
+        h+='<option value="EU"'+(line.etat==='EU'?' selected':'')+'>EU</option>';
+        h+='</select></label>';
+      } else {
+        h+='<label class="f">État entrée<input disabled value="—"></label>';
+      }
+      h+='<label class="f">Coef.<input type="number" min="0" max="1" step="0.001" data-chifline="'+room.id+'.'+line.id+'.coef" value="'+esc(line.coef)+'"></label>';
+      h+='<label class="f">T (1=dég. 2=vétusté)<select data-chifline="'+room.id+'.'+line.id+'.typeT">';
+      h+='<option value="1"'+(line.typeT===1?' selected':'')+'>1</option>';
+      h+='<option value="2"'+(line.typeT===2?' selected':'')+'>2</option>';
+      h+='</select></label>';
+      h+='</div>';
+      h+='<div style="text-align:right;font-weight:700;margin-top:4px">'+fmtEuro(montant)+'</div>';
+      h+='</div>';
+    });
+    h+='<div class="act"><button class="btn sm" data-act="chifAddLineIn" data-r="'+room.id+'">+ Ligne</button></div></div>';
+  });
+  const ttc=chifTotal(),ht=ttc/1.2,tva=ttc-ht;
+  h+='<div class="it filled"><div class="g">';
+  h+='<div class="f"><span>Total H.T.</span><div style="font-weight:600">'+fmtEuro(ht)+'</div></div>';
+  h+='<div class="f"><span>TVA 20 %</span><div>'+fmtEuro(tva)+'</div></div>';
+  h+='<div class="f"><span>Montant TTC</span><div style="font-weight:800;font-size:18px;color:var(--acc)">'+fmtEuro(ttc)+'</div></div>';
+  h+='</div></div>';
+  h+='<div class="act">';
+  h+='<button class="btn p" data-act="chifExport">Exporter le chiffrage (HTML)</button>';
+  h+='<button class="btn sm" data-act="chifPrint">Aperçu / Imprimer</button>';
+  h+='</div>';
+  h+='<p class="lg"><strong>T = 1</strong> : dégradation (coef. forcé à 1) · <strong>T = 2</strong> : usure/vétusté (coef. selon état entrée + durée d’occupation)<br>Les prix catalogue sont TTC. HT = TTC ÷ 1,20.</p>';
+  return h;
+}
+function chifBuildDoc(){
+  ensureChif();
+  const parts=occPartsFromS();
+  const temps=parts.years+' an(s) '+parts.months+' mois';
+  let tables='';
+  let totalTTC=0;
+  S.chif.rooms.forEach(room=>{
+    if(!room.lines.length)return;
+    tables+='<h2>'+esc(room.name)+'</h2><table><tr><th>Désignation</th><th>Qté</th><th>Unité</th><th>Prix TTC</th><th>État entrée</th><th>Coef.</th><th>Montant TTC</th><th>T</th></tr>';
+    room.lines.forEach(line=>{
+      const m=line.qty*line.prix*line.coef;totalTTC+=m;
+      tables+='<tr><td>'+esc(line.lib)+'</td><td>'+line.qty+'</td><td>'+esc(line.unit)+'</td><td>'+Number(line.prix).toFixed(2)+'</td><td>'+(line.typeT===2?esc(line.etat||'—'):'—')+'</td><td>'+line.coef+'</td><td>'+m.toFixed(2)+'</td><td>'+line.typeT+'</td></tr>';
+    });
+    tables+='</table>';
+  });
+  const ht=totalTTC/1.2,tva=totalTTC-ht;
+  const body='<div class="hdband"><span class="brand">EDL 06 IMMO</span><span class="sub">Chiffrage – État des lieux de sortie</span></div>'+
+  '<table><tr><td>Client</td><td>'+esc(S.v.client||'')+'</td><td>Temps d’occupation</td><td>'+esc(temps)+'</td></tr>'+
+  '<tr><td>Sortant</td><td>'+esc(S.v.sor||'')+'</td><td>N° RDV</td><td>'+esc(S.v.rdv||'')+'</td></tr>'+
+  '<tr><td>Adresse</td><td colspan="3">'+esc(S.v.adr||'')+'</td></tr>'+
+  '<tr><td>Date entrée</td><td>'+esc(S.v.dent||'')+'</td><td>Date sortie</td><td>'+esc(S.v.date||'')+'</td></tr></table>'+
+  tables+
+  '<table><tr><td><b>Total H.T.</b></td><td style="text-align:right">'+ht.toFixed(2)+' €</td></tr>'+
+  '<tr><td>TVA 20 %</td><td style="text-align:right">'+tva.toFixed(2)+' €</td></tr>'+
+  '<tr><td><b>Montant TTC</b></td><td style="text-align:right"><b>'+totalTTC.toFixed(2)+' €</b></td></tr></table>'+
+  '<p style="font-size:12px;color:#5d6d76;margin-top:16px">Après comparaison entre état des lieux d’entrée et de sortie. Dégradations imputables au locataire sortant, après abattement de la vétusté. Imputation selon la grille forfaitaire de référence 2026.</p>';
+  return '<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chiffrage — EDL 06 IMMO</title><style>body{font:14px/1.4 system-ui,sans-serif;margin:20px;color:#17252d;max-width:900px}table{border-collapse:separate;border-spacing:0 6px;width:100%;margin:6px 0 16px;font-size:13px}td,th{border:1px solid #e2e6e8;padding:7px 9px;text-align:left;vertical-align:top}th{background:#eef3f5;font-weight:600}h2{margin:20px 0 4px;font-size:17px}.hdband{background:#0e6d8c;color:#fff;border-radius:12px;padding:18px 22px;margin-bottom:14px}.hdband .brand{font-weight:800;font-size:22px;letter-spacing:.06em;display:block}.hdband .sub{font-size:13px;opacity:.9}@media print{body{margin:8mm}}</style><body>'+body;
+}
+function chifExportDoc(){
+  const doc=chifBuildDoc();
+  const name=(S.v.rdv?S.v.rdv+' ':'')+'Chiffrage.html';
+  const blob=new Blob([doc],{type:'text/html'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();
+}
+function searchCatalogByQuery(q,limit){
+  q=(q||'').toLowerCase().trim();
+  if(!q||q.length<2)return [];
+  const tokens=q.split(/\s+/).filter(Boolean);
+  const scored=GRILLE.map(g=>{
+    const hay=(g.lib+' '+g.cat).toLowerCase();
+    let sc=0;
+    if(hay.includes(q))sc+=10;
+    tokens.forEach(t=>{if(hay.includes(t))sc+=3});
+    // boost if all tokens present
+    if(tokens.length&&tokens.every(t=>hay.includes(t)))sc+=5;
+    return {g,sc};
+  }).filter(x=>x.sc>0).sort((a,b)=>b.sc-a.sc||a.g.prix-b.g.prix);
+  return scored.slice(0,limit||12).map(x=>x.g);
+}
+function renderLineSuggestions(roomId,lineId){
+  ensureChif();
+  const room=S.chif.rooms.find(r=>String(r.id)===String(roomId));
+  const line=room&&room.lines.find(l=>String(l.id)===String(lineId));
+  const box=document.getElementById('chif-sug-'+roomId+'-'+lineId);
+  if(!box||!line)return;
+  const list=line.suggestions||[];
+  if(!list.length){
+    box.innerHTML='<span class="lg">Aucun poste catalogue correspondant — continue à taper ou utilise la recherche en haut</span>';
+    return;
+  }
+  box.innerHTML=list.map((s,i)=>{
+    const lab=s.lib.length>48?s.lib.slice(0,48)+'…':s.lib;
+    return '<button class="btn sm" data-act="chifPick" data-r="'+roomId+'" data-id="'+lineId+'" data-si="'+i+'" style="font-size:11px;padding:4px 8px;margin:2px">'+esc(lab)+' · '+s.prix+'€</button>';
+  }).join('');
+}
+function chifSearchCatalog(q){
+  const box=document.getElementById('chifCatResults');
+  if(!box)return;
+  const hits=searchCatalogByQuery(q,20);
+  if(!(q||'').trim()||(q||'').trim().length<2){box.innerHTML='';return}
+  if(!hits.length){box.innerHTML='<span class="lg">Aucun résultat</span>';return}
+  box.innerHTML=hits.map(g=>{
+    const gi=GRILLE.indexOf(g);
+    return '<div style="padding:4px 0;border-bottom:1px solid var(--line);cursor:pointer" data-act="chifAddFromCat" data-gi="'+gi+'"><b style="font-size:12px">'+esc(g.lib)+'</b> <span style="color:var(--acc);font-weight:600">'+fmtEuro(g.prix)+'</span> <span class="lg">'+esc(g.cat)+'</span></div>';
+  }).join('');
+}
+
+
+let catQ='';
+let catCat='';
+let catEdit=-1;
+function catCategories(){
+  const s={};
+  GRILLE.forEach(g=>{if(g.cat)s[g.cat]=1});
+  return Object.keys(s).sort();
+}
+function renderCat(){
+  const cats=catCategories();
+  const q=(catQ||'').toLowerCase().trim();
+  const filtered=GRILLE.map((g,i)=>({g,i})).filter(({g})=>{
+    if(catCat&&g.cat!==catCat)return false;
+    if(!q)return true;
+    return (g.lib+' '+g.cat).toLowerCase().includes(q);
+  });
+  let h='<h2>Catalogue des interventions</h2>';
+  h+='<p class="lg">Grille forfaitaire 2026 — modifie les prix, ajoute des postes, exporte / importe un JSON. Enregistré sur cet appareil.</p>';
+  h+='<div class="act">';
+  h+='<button class="btn p sm" data-act="catAdd">+ Ajouter un poste</button>';
+  h+='<button class="btn sm" data-act="catExport">Exporter JSON</button>';
+  h+='<label class="btn sm">Importer JSON<input type="file" accept="application/json" hidden id="catImp"></label>';
+  h+='<button class="btn d sm" data-act="catReset">Réinitialiser (grille de base)</button>';
+  h+='</div>';
+  h+='<div class="g">';
+  h+='<label class="f">Recherche<input id="catSearch" data-catsearch="1" value="'+esc(catQ)+'" placeholder="ex. mitigeur, peinture…"></label>';
+  h+='<label class="f">Catégorie<select id="catCat" data-catcat="1"><option value="">Toutes ('+GRILLE.length+')</option>';
+  cats.forEach(c=>{
+    const n=GRILLE.filter(g=>g.cat===c).length;
+    h+='<option value="'+esc(c)+'"'+(catCat===c?' selected':'')+'>'+esc(c)+' ('+n+')</option>';
+  });
+  h+='</select></label></div>';
+  h+='<p class="lg">'+filtered.length+' poste(s) affiché(s)'+(GRILLE.length!==GRILLE_BASE.length?' · catalogue personnalisé': '')+'</p>';
+
+  if(catEdit>=0&&GRILLE[catEdit]){
+    const g=GRILLE[catEdit];
+    h+='<div class="it warn"><div class="hd"><b>Édition</b><button class="btn sm" data-act="catEditClose">Fermer</button></div>';
+    h+='<div class="g">';
+    const catList=catCategories();
+    const curCat=g.cat||'';
+    if(curCat&&!catList.includes(curCat))catList.push(curCat);
+    catList.sort();
+    h+='<label class="f">Catégorie<select data-catedit="cat" data-cat-select="1">';
+    catList.forEach(c=>{h+='<option value="'+esc(c)+'"'+(c===curCat?' selected':'')+'>'+esc(c)+'</option>'});
+    h+='<option value="__new__">+ Nouvelle catégorie…</option>';
+    h+='</select></label>';
+    h+='<label class="f" id="catNewWrap" style="display:none">Nom de la nouvelle catégorie<input data-catedit="catNew" placeholder="ex. Menuiserie" autocomplete="off"></label>';
+    h+='<label class="f">Libellé<input data-catedit="lib" value="'+esc(g.lib||'')+'"></label>';
+    h+='<label class="f">Prix TTC<input type="number" step="0.01" min="0" data-catedit="prix" value="'+esc(g.prix)+'"></label>';
+    h+='<label class="f">Unité<input data-catedit="unit" value="'+esc(g.unit||'u')+'"></label>';
+    h+='<label class="f">Durée de vie V (ans)<input type="number" step="0.1" min="0" data-catedit="V" value="'+esc(g.V==null?'':g.V)+'" placeholder="vide = pas de vétusté"></label>';
+    h+='<label class="f">Franchise F (ans)<input type="number" step="0.1" min="0" data-catedit="F" value="'+esc(g.F==null?'':g.F)+'"></label>';
+    h+='<label class="f">Abattement A (%/an)<input type="number" step="0.1" min="0" data-catedit="A" value="'+esc(g.A==null?'':g.A)+'"></label>';
+    h+='<label class="f">Résiduel R (%)<input type="number" step="0.1" min="0" data-catedit="R" value="'+esc(g.R==null?'':g.R)+'"></label>';
+    h+='</div>';
+    h+='<div class="act"><button class="btn p sm" data-act="catSave">Enregistrer</button>';
+    h+='<button class="btn d sm" data-act="catDel" data-i="'+catEdit+'">Supprimer ce poste</button></div></div>';
+  }
+
+  const show=filtered.slice(0,80);
+  show.forEach(({g,i})=>{
+    h+='<div class="it'+(catEdit===i?' filled':'')+'"><div class="hd">';
+    h+='<b style="font-size:13px">'+esc(g.lib)+'</b>';
+    h+='<button class="btn sm" data-act="catEdit" data-i="'+i+'">Modifier</button></div>';
+    h+='<p class="lg">'+esc(g.cat||'')+' · <b>'+fmtEuro(g.prix)+'</b> / '+esc(g.unit||'u');
+    if(g.V!=null)h+=' · Vétusté V'+g.V+'/F'+g.F+'/A'+g.A+'%/R'+g.R+'%';
+    else h+=' · Sans vétusté (T=1)';
+    h+='</p></div>';
+  });
+  if(filtered.length>80)h+='<p class="lg">Affichage limité à 80 résultats — affine la recherche.</p>';
+  return h;
+}
+
+let cmpShowAll=false;
+
+function fresh(){return {v:{sgXn:'ARMANA Frédéric',sgXadr:'485, chemin Thomas Garbies 06610 La Gaude'},rooms:[{id:'r1',n:'Entrée',t:'entree'},{id:'r2',n:'Cuisine',t:'cuisine'},{id:'r3',n:'Séjour',t:'base'},{id:'r4',n:'Chambre 1',t:'base'},{id:'r5',n:'Chambre 2',t:'base'},{id:'r6',n:'Salle de bain',t:'sdb'},{id:'r7',n:'WC',t:'wc'}],
+ ph:{},tab:'gen',cp:[{id:'c1',t:'Eau',orig:1},{id:'c2',t:'Électricité',orig:1},{id:'c3',t:'Gaz',orig:1}],x:{},iv:[],san:{},
+ an:ANN0.map((n,i)=>({id:'a'+i,n,orig:1})),kl:KEYS0.map((n,i)=>({id:'k'+i,n,orig:1})),baseline:null,chif:null}}
+let S=fresh();
+function loadLS(){
+  try{
+    const a=localStorage.getItem('edl1');
+    if(a){const j=JSON.parse(a);if(isObj(j))Object.assign(S,j);}
+    const p=localStorage.getItem('edl1p');
+    if(p){const ph=JSON.parse(p);if(isObj(ph))S.ph=ph;}
+  }catch(e){}
+  if(!Array.isArray(S.rooms)||!S.rooms.length)S.rooms=fresh().rooms;
+  if(!Array.isArray(S.cp)||!S.cp.length)S.cp=fresh().cp;
+  if(!Array.isArray(S.an)||!S.an.length)S.an=fresh().an;
+  if(!Array.isArray(S.kl)||!S.kl.length)S.kl=fresh().kl;
+  if(!Array.isArray(S.iv))S.iv=[];
+  if(!isObj(S.v))S.v={};
+  if(!isObj(S.x))S.x={};
+  if(!isObj(S.san))S.san={};
+  if(!isObj(S.ph))S.ph={};
+}
+loadLS();
+let tm;
+function msg(t){$('#st').textContent=t;clearTimeout(tm);tm=setTimeout(()=>$('#st').textContent='',2500)}
+function save(){try{localStorage.setItem('edl1',JSON.stringify({v:S.v,rooms:S.rooms,tab:S.tab,cp:S.cp,x:S.x,iv:S.iv,an:S.an,kl:S.kl,san:S.san,baseline:S.baseline,chif:S.chif}))}catch(e){msg('Sauvegarde impossible')}}
+function savePh(){try{localStorage.setItem('edl1p',JSON.stringify(S.ph))}catch(e){msg('Mémoire pleine : exporte avant de continuer')}}
+const isSortant=()=>!!S.v.sensS;
+
+const chip=(k,v,l,t,col)=>`<button class="c${S.v[k]===v?' on':''}" data-k="${esc(k)}" data-v="${esc(v)}"${col?` style="--c:var(${col});--t:#fff"`:''}${t?` title="${esc(t)}"`:''}>${esc(l)}</button>`;
+if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js').catch(()=>{})}
+
+const sel=(k,o)=>`<select data-k="${esc(k)}"><option value="">—</option>${o.map(x=>`<option${S.v[k]===x?' selected':''}>${esc(x)}</option>`).join('')}</select>`;
+function fld([k,l,t]){
+  if(Array.isArray(t))return `<div class="seg"><span>${esc(l)}</span>${t.map(o=>chip(k,o,o)).join('')}</div>`;
+  return `<label class="f">${esc(l)}<input data-k="${k}" type="${t||'text'}" value="${esc(S.v[k]||'')}"></label>`;
+}
+const groups=G=>G.map(([t,f])=>`<h3>${esc(t)}</h3><div class="g">${f.map(fld).join('')}</div>`).join('');
+function contactsBlock(){
+  const P=[['Client',S.v.client,S.v.cliente,S.v.clientte],['Locataire entrant',S.v.ent,S.v.entem,S.v.entte],['Locataire sortant',S.v.sor,S.v.sorem,S.v.sorte]];
+  const rows=P.filter(([l,n,e,t])=>n||e||t).map(([l,n,e,t],i)=>{
+    const nk=i===0?'cliente':i===1?'entem':'sorem',tk=i===0?'clientte':i===1?'entte':'sorte';
+    return `<div class="it"><b>${esc(l)}${n?' — '+esc(n):''}</b><div class="row">${e?`<button class="btn sm" data-act="copy" data-src="${nk}">Copier l’e-mail</button>`:''}${t?`<button class="btn sm" data-act="copy" data-src="${tk}">Copier le tél.</button>`:''}</div></div>`;
+  }).join('');
+  return rows?`<h3 class="strong">Contacts</h3>${rows}`:'';
+}
+const nm=(k,d)=>k==='sgX'?(S.v.sgXn||'ARMANA Frédéric'):(S.v[k+'n']??S.v[d]??'');
+const ob=k=>`<textarea class="ob" rows="1" data-k="${k}b" placeholder="Observations">${esc(S.v[k+'b']||'')}</textarea>`;
+const grow=t=>{t.style.height='auto';t.style.height=t.scrollHeight+'px'};
+const NOETAT=new Set(['Éclairage']),DEFNV=new Set(['Prises','Robinets']);
+function item(p,key,def,flags=true,dupBase){
+  const [name,opts,cn,chk,dup,cond,opts2]=def,k=p+'.'+key,sortant=isSortant(),notrch=NOTRCH.has(dupBase||name),removable=key.charAt(0)==='e',noetat=NOETAT.has(dupBase||name);
+  if(DEFNV.has(dupBase||name)&&S.v[k+'s']===undefined)S.v[k+'s']='NV';
+  const fl=(s,l,ti)=>`<button class="c${S.v[k+s]?' on':''}" data-k="${k+s}" data-t="1"${ti?` title="${ti}"`:''}>${l}</button>`;
+  const partial=S.v[k+'o']||S.v[k+'b']||(cn&&cn.some((c,j)=>S.v[k+'c'+j]))||(chk&&chk.some((c,j)=>S.v[k+'x'+j]));
+  const warn=partial&&!S.v[k+'s'];
+  const filled=!!S.v[k+'s'];
+  return `<div class="it${warn?' warn':filled?' filled':''}"><div class="hd"><b>${esc(name)}</b>
+  ${opts?sel(k+'o',opts):''}${opts2?sel(k+'o2',opts2):''}${dup?`<button class="mini" data-act="dup" data-r="${p}" data-b="${esc(dupBase??name)}" data-i="${esc(key)}" title="Ajouter une ligne ${esc(name)} juste en dessous">+</button>`:''}${removable?`<button class="mini d" data-act="delx" data-r="${p}" data-id="${esc(key)}" title="Retirer cette ligne">×</button>`:''}</div>
+  ${cn?`<div class="g cn">${cn.map((c,j)=>`<label class="f">${c}<input type="number" min="0" inputmode="numeric" data-k="${k}c${j}" value="${esc(S.v[k+'c'+j]||'')}"></label>`).join('')}</div>`:''}
+  ${chk?`<div class="row">${chk.map((c,j)=>`<button class="c${S.v[k+'x'+j]?' on':''}" data-k="${k}x${j}" data-t="1">${esc(c)}</button>`).join('')}</div>`:''}
+  ${cond&&S.v[k+'o']===cond.when?`<div class="g cn"><label class="f">${cond.label}<input type="number" min="0" inputmode="numeric" data-k="${k}cc" value="${esc(S.v[k+'cc']||'')}"></label></div>`:''}
+  ${noetat?'':`<div class="row">${ST.map(([c,t,col])=>chip(k+'s',c,c,t,col)).join('')}${notrch?'':`<span class="tc"><input type="number" min="0" inputmode="numeric" placeholder="TrCh" data-k="${k}t" value="${esc(S.v[k+'t']||'')}"></span>`}</div>`}
+  ${flags&&sortant?`<div class="rsub">${fl('1','1 · À réparer')}${fl('2','2 · À nettoyer')}</div>`:''}
+  ${ob(k)}</div>`;
+}
+function roomItems(r){
+  const ex=S.x[r.id]||[];
+  const extraDef=(e,baseDef)=>{
+    // def = [name, opts, cn, chk, dup, cond, opts2]
+    const src=baseDef||[];
+    return [
+      e.n,
+      e.o!=null?e.o:src[1],
+      e.c!=null?e.c:src[2],
+      e.k!=null?e.k:src[3],
+      e.dup!=null?e.dup:src[4],
+      e.cond!=null?e.cond:src[5],
+      e.o2!=null?e.o2:src[6]
+    ];
+  };
+  let h=TPL[r.t].i.map((x,i)=>{
+    const base=x[0];
+    return item(r.id,'t'+i,x)+ex.filter(e=>e.base===base).map(e=>item(r.id,e.id,extraDef(e,x),true,e.base)).join('');
+  }).join('');
+  h+=ex.filter(e=>!e.base).map(e=>item(r.id,e.id,extraDef(e))).join('');
+  return h;
+}
+const SC_LAV=SC.filter(c=>!['Flexible','Douchette','Inverseur'].includes(c));
+const sanItem=(k,n,cols,extra)=>{cols=cols||SC;return `<div class="it${S.v[k+'s']?' filled':''}"><div class="hd"><b>${n}</b>${extra||''}</div><div class="g"><label class="f">Revêtement${sel(k+'r',REV)}</label><label class="f">État${sel(k+'s',SS)}</label>${cols.map((c,j)=>`<label class="f">${c}${sel(k+j,SS)}</label>`).join('')}</div>${ob(k)}</div>`};
+const san=id=>{
+  let h='<h3>Sanitaires</h3>';
+  SN.forEach((n,i)=>{const extra=n==='Lavabo'?`<button class="mini" data-act="dupsan" data-r="${id}" title="Dupliquer le lavabo">+</button>`:'';
+    h+=sanItem('sn'+id+'.'+i+'.',n,null,extra)});
+  (S.san[id]||[]).forEach(eid=>{h+=sanItem('sn'+id+'.x'+eid+'.','Lavabo',null,`<button class="mini d" data-act="delsan" data-r="${id}" data-id="${eid}" title="Retirer">×</button>`)});
+  return h;
+};
+const wcCard=id=>{const k='wcg'+id+'.',filled=WCF.some((c,j)=>S.v[k+j]);return `<div class="it${filled?' filled':''}"><b>WC</b><div class="g">${WCF.map((c,j)=>`<label class="f">${c}${sel(k+j,SS)}</label>`).join('')}</div>${ob(k)}</div>`};
+const meters=()=>`<h3>Compteurs</h3>`+S.cp.map(c=>{const k='cp'+c.id,l=MT[c.t],f=(s,t)=>`<label class="f">${t}<input data-k="${k+s}" value="${esc(S.v[k+s]||'')}"></label>`;
+  return `<div class="it"><div class="hd"><b>${c.t}</b><button class="mini" data-act="dupcp" data-r="${c.id}" title="Dupliquer juste en dessous">+</button>${c.orig?'':`<button class="btn d sm" data-act="delcp" data-r="${c.id}">Retirer</button>`}</div><div class="g">${f('n','N° compteur')}${f('e','Emplacement')}${f('a',l[0])}${l[1]?f('b',l[1]):''}</div></div>`}).join('')+`<div class="act"><select id="nc" style="width:auto">${Object.keys(MT).map(t=>`<option>${t}</option>`).join('')}</select><button class="btn sm" data-act="addcp">Ajouter un compteur</button></div>`;
+const ivPh=id=>`<div class="ph" id="phs-${id}">${phView(id)}</div><div class="act"><label class="btn sm">Photo<input type="file" accept="image/*" capture="environment" hidden data-ph="${id}"></label><label class="btn sm">Galerie<input type="file" accept="image/*" multiple hidden data-ph="${id}"></label></div>`;
+const ivRow=r=>{const k='iv'+r.id,f=(s,l)=>`<button class="c${S.v[k+s]?' on':''}" data-k="${k+s}" data-t="1">${l}</button>`,
+  n=(s,l,x='')=>`<label class="f">${l}<input ${x} data-k="${k+s}" value="${esc(S.v[k+s]||'')}"></label>`;
+  return `<div class="it"><div class="g">${n('p','Pièce','list="dp"')}${n('d','Description','list="dd"')}${n('n','Nbre','type="number" min="0" inputmode="numeric"')}<label class="f">État${sel(k+'s',SS)}</label><label class="f">Aspect${sel(k+'a',SS)}</label></div>${ob(k)}${ivPh('iv'+r.id)}<div class="row">${isSortant()?f('1','1 · À réparer'):''}${isSortant()?f('2','2 · À nettoyer'):''}<button class="btn d sm" data-act="deliv" data-r="${r.id}">Supprimer</button></div></div>`};
+const photoBlock=(id,title)=>`<h3>${title||'Photos'}</h3><div class="ph" id="phs">${phView(id)}</div><div class="act"><label class="btn sm">Prendre une photo<input type="file" accept="image/*" capture="environment" hidden data-ph="${id}"></label><label class="btn sm">Galerie<input type="file" accept="image/*" multiple hidden data-ph="${id}"></label></div>`;
+function dynList(arr,tag,extra,ph){
+  return arr.map(o=>{const k=tag+o.id+'.';return `<div class="it"><div class="hd"><input style="font-weight:600;border:0;background:none;padding:2px" placeholder="${tag==='kl'?'Type de clé (ex. clé plate, badge…)':''}" data-nmid="${o.id}" data-nmtag="${tag}" value="${esc(o.n)}"><button class="mini" data-act="dup${tag}" data-r="${o.id}" title="Dupliquer juste en dessous">+</button>${o.orig?'':`<button class="btn d sm" data-act="del${tag}" data-r="${o.id}">Retirer</button>`}</div>${extra(k,o)}</div>`}).join('')
+   +`<div class="act"><button class="btn sm" data-act="add${tag}">Ajouter</button></div>`;
+}
+function tabFilled(id){
+  if(id==='gen')return !!(S.v.sensE||S.v.sensS||GENKEYS.some(k=>S.v[k]));
+  if(id==='cpt')return S.cp.some(c=>{const k='cp'+c.id;return S.v[k+'n']||S.v[k+'e']||S.v[k+'a']||S.v[k+'b']})||CPTKEYS.some(k=>S.v[k]);
+  if(id==='inv')return S.iv.some(r=>{const k='iv'+r.id;return S.v[k+'p']||S.v[k+'d']||S.v[k+'s']||S.v[k+'a']||S.v[k+'b']});
+  if(id==='ann')return S.an.some(o=>{const k='an'+o.id+'.';return S.v[k+'p']||S.v[k+'s']||S.v[k+'m']||S.v[k+'b']||S.v[k+'num']});
+  if(id==='cles')return total()>0;
+  if(id==='net')return !!(S.v.net||S.v.netgb);
+  if(id==='sig')return SIG.some(([k])=>S.v[k])||!!S.v.dent||!!S.v.com;
+  if(id==='chif')return !!(S.chif&&S.chif.rooms&&S.chif.rooms.some(r=>r.lines&&r.lines.length));
+  if(id==='cat')return GRILLE.length!==GRILLE_BASE.length;
+  if(S.rooms.some(x=>x.id===id))return !!S.v[id+'.done'];
+  return Object.keys(S.v).some(k=>k.indexOf(id+'.')===0&&S.v[k])||!!(S.ph[id]&&S.ph[id].length);
+}
+function idBlock(){
+  if(!S.baseline)return '';
+  const bv=S.baseline.v||{};
+  const fmtDate=d=>{if(!d)return '—';const dt=new Date(d);return isNaN(dt)?'—':dt.toLocaleDateString('fr-FR')};
+  const dEntree=S.v.dent,dSortie=S.v.date;
+  let duree='—';
+  const a=new Date(dEntree),b=new Date(dSortie);
+  if(dEntree&&dSortie&&!isNaN(a)&&!isNaN(b)&&b>=a){
+    let y=b.getFullYear()-a.getFullYear(),m=b.getMonth()-a.getMonth(),d=b.getDate()-a.getDate();
+    if(d<0){m--;d+=new Date(b.getFullYear(),b.getMonth(),0).getDate();}
+    if(m<0){y--;m+=12;}
+    const parts=[];if(y)parts.push(y+' an'+(y>1?'s':''));if(m)parts.push(m+' mois');if(d||!parts.length)parts.push(d+' jour'+(d>1?'s':''));
+    duree=parts.join(', ');
+  }
+  const row=(l,v)=>`<div class="f"><span>${esc(l)}</span><div style="color:var(--ink);font-size:15px">${esc(v||'—')}</div></div>`;
+  const stat=(l,v)=>`<div style="background:#eaf6ee;border-radius:10px;padding:8px 12px;text-align:center;flex:1;min-width:110px"><div style="font-size:11px;color:#5d6d76">${esc(l)}</div><div style="font-weight:700;font-size:15px">${esc(v)}</div></div>`;
+  return `<div class="it"><div class="g">
+      ${row('Client',S.v.client)}${row('E-mail client',S.v.cliente)}${row('Téléphone client',S.v.clientte)}
+      ${row('N° RDV entrée',bv.rdv)}${row('N° RDV sortie',S.v.rdv)}
+      ${row('Adresse du logement',S.v.adr)}${row('Type de logement',S.v.typ)}${row('Vide ou meublé',S.v.meub)}
+      ${row('Locataire',S.v.sor)}${row('Nouvelle adresse',S.v.nadr)}
+    </div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 16px">
+      ${stat('Date d’entrée',fmtDate(dEntree))}${stat('Date de sortie',fmtDate(dSortie))}${stat('Durée d’occupation',duree)}
+    </div>`;
+}
+function compareList(){
+  if(!S.baseline)return [];
+  const bv=S.baseline.v||{};
+  const SEV={NF:0,BE:1,EU:2,ME:3,HS:4};
+  const out=[];
+  const add=(roomLabel,name,sk,obsKey,flagBase)=>{
+    const s1=bv[sk],s2=S.v[sk];
+    const flag1=flagBase?!!S.v[flagBase+'1']:false,flag2=flagBase?!!S.v[flagBase+'2']:false;
+    const t1=flagBase?(parseInt(bv[flagBase+'t'])||0):0;
+    const t2=flagBase?(parseInt(S.v[flagBase+'t'])||0):0;
+    const trchDiff=Math.max(0,t2-t1);
+    if(!s1&&!s2&&!flag1&&!flag2&&trchDiff<=0)return;
+    let status='same';
+    if(s1!==s2){
+      if(SEV[s1]!==undefined&&SEV[s2]!==undefined)status=SEV[s2]>SEV[s1]?'deg':(SEV[s2]<SEV[s1]?'better':'same');
+      else status='diff';
+    }
+    if(flag1||flag2)status='deg';
+    if(trchDiff>0)status='deg';
+    out.push({roomLabel,name,sk,obsKey,s1,s2,status,flag1,flag2,trch1:t1,trch2:t2,trchDiff,flagBase:flagBase||null});
+  };
+  S.rooms.forEach(r=>{
+    const ex=S.x[r.id]||[];
+    TPL[r.t].i.forEach((x,i)=>{const k=r.id+'.t'+i;add(r.n,x[0],k+'s',k+'b',k)});
+    ex.forEach(e=>{const k=r.id+'.'+e.id;add(r.n,e.n,k+'s',k+'b',k)});
+    if(r.t==='sdb'){SN.forEach((n,i)=>{const k='sn'+r.id+'.'+i+'.';add(r.n,n,k+'s',k+'b')});(S.san[r.id]||[]).forEach(eid=>{const k='sn'+r.id+'.x'+eid+'.';add(r.n,'Lavabo',k+'s',k+'b')})}
+    if(r.t==='wc'){const kg='wcg'+r.id+'.';WCF.forEach((c,j)=>add(r.n,c,kg+j,null));const ks='wcs'+r.id+'.';add(r.n,'Lave-main',ks+'s',ks+'b')}
+  });
+  const bIv=S.baseline.iv||[];
+  S.iv.forEach(cur=>{
+    const base=bIv.find(b=>b.id===cur.id);
+    const k='iv'+cur.id,ks=k+'s',kn=k+'n',ka=k+'a';
+    let status='same',s1='—',s2='—';const detail=[];
+    if(base){
+      const n1=parseInt(bv[kn])||0,n2=parseInt(S.v[kn])||0,st1=bv[ks],st2=S.v[ks];
+      if(n2<n1)status='deg';
+      else if(st1!==st2){
+        if(SEV[st1]!==undefined&&SEV[st2]!==undefined)status=SEV[st2]>SEV[st1]?'deg':(SEV[st2]<SEV[st1]?'better':'same');
+        else status='diff';
+      }
+      if(n2!==n1)detail.push('Nb '+n1+' → '+n2);
+      if(st1!==st2)detail.push('État '+(st1||'—')+' → '+(st2||'—'));
+      s1=String(n1);s2=String(n2);
+    }
+    const aspect=S.v[ka],aspectBad=aspect==='ME'||aspect==='HS';
+    const flag1=!!S.v[k+'1'],flag2=!!S.v[k+'2'];
+    if((aspectBad||flag1||flag2)&&status==='same')status='deg';
+    if(status==='same'&&!aspectBad&&!flag1&&!flag2)return;
+    if(aspectBad)detail.push('Aspect '+aspect);
+    const label=S.v[k+'d']||(base&&bv[k+'d'])||'Objet';
+    out.push({roomLabel:'Inventaire',name:label+(detail.length?' — '+detail.join(', '):''),sk:k+'.qtydeg',obsKey:k+'b',s1,s2,status,flag1,flag2});
+  });
+  const bKl=S.baseline.kl||[];
+  S.kl.forEach(cur=>{
+    const base=bKl.find(b=>b.id===cur.id);if(!base)return;
+    const k='kl'+cur.id+'.',q1=parseInt(bv[k+'q'])||0,q2=parseInt(S.v[k+'q'])||0;
+    if(q2<q1)out.push({roomLabel:'Clés',name:(cur.n||'Clé')+' — quantité '+q1+' → '+q2,sk:k+'qtydeg',obsKey:null,s1:String(q1),s2:String(q2),status:'deg',flag1:false,flag2:false});
+    const s1=bv[k+'s'],s2=S.v[k+'s'];
+    if(s1!==s2&&(SEV[s1]!==undefined||SEV[s2]!==undefined)){
+      const st=SEV[s1]!==undefined&&SEV[s2]!==undefined?(SEV[s2]>SEV[s1]?'deg':(SEV[s2]<SEV[s1]?'better':'same')):'diff';
+      if(st!=='same')out.push({roomLabel:'Clés',name:(cur.n||'Clé')+' — état',sk:k+'s',obsKey:null,s1,s2,status:st,flag1:false,flag2:false});
+    }
+  });
+  if(S.v.net==='Moyen'||S.v.net==='Médiocre'){
+    out.push({roomLabel:'Nettoyage général',name:'État du nettoyage à la sortie',sk:'netg_flag',obsKey:'netgb',s1:'—',s2:S.v.net,status:'deg',flag1:false,flag2:false});
+  }
+  return out;
+}
+function tabs(){
+  const t=[['gen','Général'],['cpt','Compteurs'],...S.rooms.map(r=>[r.id,r.n||'Pièce']),['inv','Inventaire'],['ann','Annexes'],['cles','Clés']];
+  if(isSortant())t.push(['net','Nettoyage']);
+  if(S.baseline){t.push(['cmp','Comparatif']);t.push(['chif','Chiffrage']);}
+  t.push(['sig','Signatures']);
+  t.push(['cat','Catalogue']);
+  $('#tabs').innerHTML=t.map(([k,l])=>`<button class="tb${S.tab===k?' on':''}" data-tab="${k}">${esc(l)}${tabFilled(k)?'<span class="dot"></span>':''}</button>`).join('');
+}
+const total=()=>S.kl.reduce((a,o)=>a+(parseInt(S.v['kl'+o.id+'.q'])||0),0);
+function phView(id){return (S.ph[id]||[]).map((d,i)=>`<div><img src="${d}" alt="Photo ${i+1}"><button data-act="rmph" data-r="${id}" data-i="${i}" aria-label="Supprimer la photo">×</button></div>`).join('')}
+function render(){
+  try{renderCore()}
+  catch(e){console.error(e);msg('Erreur d’affichage — touche « Nouveau » si le formulaire reste bloqué');}
+}
+function renderCore(){
+  tabs();const a=$('#app'),T=S.tab;let h='';
+  if(T==='gen'){
+    const sO=S.v.sensS&&!S.v.sensE,eO=S.v.sensE&&!S.v.sensS;
+    const genRL=GEN.filter(g=>g[0]!=='Locataires');
+    h=`<h2>Constat d’état des lieux</h2><div class="seg"><span>Type d’état des lieux</span><button class="c${S.v.sensE?' on':''}" data-k="sensE" data-t="1">Entrant</button><button class="c${S.v.sensS?' on':''}" data-k="sensS" data-t="1">Sortant</button></div>${groups(genRL)}`;
+    if(!sO)h+=`<h3 class="strong">Locataire entrant</h3><div class="g">${[['ent','Nom'],['entem','E-mail'],['entte','Téléphone']].map(fld).join('')}</div>`;
+    if(!eO)h+=`<h3 class="strong">Locataire sortant</h3><div class="g">${[['sor','Nom'],['sorem','E-mail'],['sorte','Téléphone'],['nadr','Nouvelle adresse'],['ncp','Code postal'],['nville','Ville']].map(fld).join('')}</div>`;
+    h+=contactsBlock();
+  }
+  else if(T==='cpt')h=`<h2>Relevés et équipements</h2>${meters()}${groups(CPT)}${photoBlock('cpt')}`;
+  else if(T==='ann')h=`<h2>Annexes</h2>${dynList(S.an,'an',(k,o)=>`<div class="g">${['Cave','Garage','Grenier'].includes(o.n)?`<label class="f">N°<input data-k="${k}num" value="${esc(S.v[k+'num']||'')}"></label>`:''}<label class="f">Porte${sel(k+'p',SS)}</label><label class="f">Serrure${sel(k+'s',SS)}</label><label class="f">Vide ou m³ à vider<input data-k="${k}m" value="${esc(S.v[k+'m']||'')}"></label></div>${ob(k)}`)}${photoBlock('ann')}`;
+  else if(T==='cles')h=`<h2>Clés remises</h2>${dynList(S.kl,'kl',(k,o)=>`<div class="g"><label class="f">Quantité<input type="number" min="0" inputmode="numeric" data-k="${k}q" value="${esc(S.v[k+'q']||'')}"></label>${['Émetteur','Clé magnétique'].includes(o.n)?`<label class="f">État${sel(k+'s',SS)}</label>`:''}</div>`)}<p><b>Total clés : <span id="tot">${total()}</span></b></p><h3>Observations</h3>${ob('clesg')}${photoBlock('cles')}`;
+  else if(T==='net')h=`<h2>Nettoyage général</h2><div class="row">${['Bon','Moyen','Médiocre'].map(o=>chip('net',o,o)).join('')}</div>${ob('netg')}`;
+  else if(T==='chif'){h=renderChif()}
+  else if(T==='cat'){h=renderCat()}
+  else if(T==='cmp'){
+    const list=compareList();
+    const counts={deg:0,better:0,same:0,diff:0};
+    list.forEach(x=>counts[x.status]++);
+    const shown=list.filter(x=>cmpShowAll||x.status!=='same');
+    let total=0;
+    const rows=shown.map(x=>{
+      const lab=x.status==='deg'?'Dégradation':x.status==='better'?'Amélioration':x.status==='diff'?'Écart':'Identique';
+      let extra='';
+      if(x.status==='deg'){
+        const ik=x.sk+'imp',ck=x.sk+'cout',imp=!!S.v[ik];
+        if(imp)total+=parseFloat(S.v[ck])||0;
+        extra=`<div class="row"><label class="f" style="flex-direction:row;align-items:center;gap:6px;width:auto"><input type="checkbox" data-act="impchk" data-k="${ik}" ${imp?'checked':''}> Imputable au locataire</label><label class="f" style="width:140px">Coût estimé (€)<input type="number" min="0" step="0.01" inputmode="decimal" data-k="${ck}" value="${esc(S.v[ck]||'')}"></label></div>`;
+      }
+      const flagBadges=`${x.flag1?'<span class="badge deg">1 · À réparer</span>':''}${x.flag2?'<span class="badge deg">2 · À nettoyer</span>':''}${x.trchDiff>0?'<span class="badge deg">TrCh +'+x.trchDiff+'</span>':''}`;
+      const bv=(S.baseline&&S.baseline.v)||{};
+      const obsIn=x.obsKey?(bv[x.obsKey]||''):'';
+      const obsOut=x.obsKey?(S.v[x.obsKey]||''):'';
+      let obs='';
+      if(obsIn||obsOut){
+        obs='<div class="g" style="margin-top:6px">';
+        obs+=`<label class="f">Obs. entrée<textarea disabled rows="2" style="resize:none;min-height:38px">${esc(obsIn||'—')}</textarea></label>`;
+        obs+=`<label class="f">Obs. sortie<textarea disabled rows="2" style="resize:none;min-height:38px">${esc(obsOut||'—')}</textarea></label>`;
+        obs+='</div>';
+      }
+      const trchRow=x.trchDiff>0?`<div class="g"><label class="f">TrCh entrée<input disabled value="${esc(String(x.trch1??0))}"></label><label class="f">TrCh sortie<input disabled value="${esc(String(x.trch2??0))}"></label><label class="f">Écart TrCh<input disabled value="+${esc(String(x.trchDiff))}"></label></div>`:'';
+      return `<div class="it"><div class="hd"><b>${esc(x.roomLabel)} — ${esc(x.name)}</b><span class="badge ${x.status}">${lab}</span>${flagBadges}</div><div class="g"><label class="f">Entrée<input disabled value="${esc(x.s1||'—')}"></label><label class="f">Sortie<input disabled value="${esc(x.s2||'—')}"></label></div>${trchRow}${extra}${obs}</div>`;
+    }).join('');
+    h=`<h2>Comparatif entrée / sortie</h2>
+    ${idBlock()}
+    <div class="sum"><span class="sc" style="background:#fbe4e6">${counts.deg} dégradé(s)</span><span class="sc" style="background:#e8f5ec">${counts.better} amélioré(s)/nettoyé(s)</span><span class="sc" style="background:#eef1f2">${counts.same+counts.diff} identique(s)</span></div>
+    <div class="act"><button class="btn sm" data-act="cmpToggle">${cmpShowAll?'Afficher seulement les écarts':'Afficher tout'}</button><label class="btn sm">Comparer avec un autre fichier<input type="file" accept="application/json" hidden id="cmpFile"></label><button class="btn d sm" data-act="cmpClear">Effacer la référence</button></div>
+    ${rows||'<p class="lg">Aucun écart à afficher.</p>'}
+    <h3 class="strong">Total imputable au locataire : ${total.toFixed(2).replace('.',',')} €</h3>
+    <div class="act"><button class="btn p sm" data-act="expDecompte">Exporter le décompte</button><button class="btn p sm" data-act="goChif">Ouvrir le chiffrage →</button></div>
+    <p class="lg">Coche « Imputable au locataire » sur chaque poste à reprendre dans le chiffrage. Les écarts TrCh (trous de chevilles) apparaissent automatiquement.</p>`;
+  }
+  else if(T==='inv')h=`<h2>Inventaire du mobilier</h2><div class="g">${fld(['ive','Entrée',['Établissement','Contrôle']])}${fld(['ivs','Sortie',['Établissement','Contrôle']])}</div><datalist id="dp">${S.rooms.map(r=>`<option value="${esc(r.n)}">`).join('')}</datalist><datalist id="dd">${DD.map(x=>`<option value="${esc(x)}">`).join('')}</datalist>${S.iv.map(ivRow).join('')}<div class="act"><button class="btn p sm" data-act="addiv">Ajouter un objet</button></div>${photoBlock('inv','Photos mobilier')}`;
+  else if(T==='sig'){
+    const sO=S.v.sensS&&!S.v.sensE,eO=S.v.sensE&&!S.v.sensS;
+    const blk=([k,l,d])=>{const locked=!!S.v[k+'lock'];
+      const adrFld=k==='sgX'?`<label class="f">Adresse postale<input data-k="${k}adr" value="${esc(S.v[k+'adr']||'485, chemin Thomas Garbies 06610 La Gaude')}"></label>`:'';
+      return `<h3>${l}</h3><label class="f">Nom<input data-k="${k}n" value="${esc(nm(k,d))}"></label>${adrFld}<canvas class="sg${locked?' locked':''}" data-k="${k}"${locked?' style="pointer-events:none"':''}></canvas><div class="act">${locked?`<span class="lg">✓ Signature validée</span><button class="btn sm" data-act="unlock" data-k="${k}">Modifier</button>`:`<button class="btn sm" data-act="clr" data-k="${k}">Effacer</button><button class="btn p sm" data-act="lock" data-k="${k}">Valider la signature</button>`}</div>`;
+    };
+    h=`<h2>Signatures</h2>${eO?'':blk(SIG[0])}<div class="g">${fld(['dent','Date d’entrée dans le logement','date'])}</div><label class="f">Commentaire du locataire<textarea rows="4" data-k="com">${esc(S.v.com||'')}</textarea></label>${sO?'':blk(SIG[1])}${blk(SIG[2])}${blk(SIG[3])}`;
+  }
+  else{
+    const r=S.rooms.find(x=>x.id===T);if(!r){S.tab='gen';return render()}
+    h=`<label class="f">Nom de la pièce<input data-rn="${r.id}" value="${esc(r.n)}"></label>`;
+    if(r.t==='balcon')h+=`<label class="f">Pièce associée${sel(r.id+'.assoc',S.rooms.filter(x=>x.id!==r.id).map(x=>x.n))}</label>`;
+    h+=`<p class="lg">NV non vérifié · NF neuf · BE bon état · EU état d’usage · ME mauvais état · HS hors service ${isSortant()?'· 1 à changer/réparer · 2 à nettoyer':''}</p>`;
+    if(r.t==='wc')h+=wcCard(r.id)+sanItem('wcs'+r.id+'.','Lave-main',SC_LAV);
+    h+=roomItems(r);
+    h+=`<div class="act"><input id="xn" placeholder="Nouvelle ligne (ex. Rosier, Store…)" style="flex:1"><button class="btn sm" data-act="addx" data-r="${r.id}">Ajouter une ligne</button></div>`;
+    if(r.t==='sdb')h+=san(r.id);
+    h+=photoBlock(r.id);
+    h+=`<div class="act"><button class="btn ${S.v[r.id+'.done']?'p':''} sm" data-act="donebtn" data-r="${r.id}">${S.v[r.id+'.done']?'✓ Pièce terminée':'Marquer la pièce comme terminée'}</button></div>`;
+    h+=`<h3>Ajouter une pièce</h3><div class="act"><select id="nt" style="width:auto">${Object.entries(TPL).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}</select><button class="btn sm" data-act="add">Ajouter</button><button class="btn d sm" data-act="del" data-r="${r.id}">Supprimer cette pièce</button></div>`;
+  }
+  a.innerHTML=h;
+  a.querySelectorAll('textarea.ob').forEach(grow);
+  if(T==='sig')sigInit();
+}
+document.addEventListener('click',e=>{
+  const tb=e.target.closest('[data-tab]');if(tb){S.tab=tb.dataset.tab;render();scrollTo(0,0);save();return}
+  const b=e.target.closest('.c');
+  if(b && !b.dataset.act){const k=b.dataset.k;
+    if(b.dataset.t){S.v[k]=!S.v[k];b.classList.toggle('on',!!S.v[k]);if(k==='sensE'||k==='sensS')render()}
+    else{const v=b.dataset.v;S.v[k]=S.v[k]===v?'':v;b.parentElement.querySelectorAll('.c[data-v]').forEach(x=>x.classList.toggle('on',S.v[k]===x.dataset.v))}
+    save();return}
+  const a=e.target.closest('[data-act]');if(!a)return;const d=a.dataset;
+  if(d.act==='add'){const t=$('#nt').value,n=S.rooms.filter(r=>r.t===t).length+1;const r={id:'r'+Date.now(),n:TPL[t].l.split(' (')[0]+(n>1?' '+n:''),t};S.rooms.push(r);S.tab=r.id;render();save()}
+  if(d.act==='del'){if(a.dataset.ok!=='1'){a.dataset.ok='1';a.textContent='Confirmer la suppression';return}
+    S.rooms=S.rooms.filter(r=>r.id!==d.r);delete S.ph[d.r];delete S.x[d.r];S.tab='gen';render();save();savePh()}
+  if(d.act==='addcp'){S.cp.push({id:'c'+Date.now(),t:$('#nc').value});render();save()}
+  if(d.act==='delcp'){S.cp=S.cp.filter(c=>c.id!==d.r);render();save()}
+  if(d.act==='dupcp'){const i=S.cp.findIndex(c=>c.id===d.r);S.cp.splice(i+1,0,{id:'c'+Date.now(),t:S.cp[i].t});render();save()}
+  if(d.act==='addx'){const n=$('#xn').value.trim();if(!n)return msg('Saisis un nom de ligne');(S.x[d.r]=S.x[d.r]||[]).push({id:uid(),n});render();save()}
+  if(d.act==='dup'){const room=S.rooms.find(x=>x.id===d.r),def=TPL[room.t].i.find(x=>x[0]===d.b);
+    const nw={id:uid(),n:d.b,o:def?def[1]:null,c:def?def[2]:null,k:def?def[3]:null,base:d.b,dup:def?def[4]:null,cond:def?def[5]:null,o2:def?def[6]:null};
+    (S.x[d.r]=S.x[d.r]||[]).push(nw);render();save()}
+  if(d.act==='delx'){S.x[d.r]=(S.x[d.r]||[]).filter(x=>x.id!==d.id);render();save()}
+  if(d.act==='donebtn'){S.v[d.r+'.done']=!S.v[d.r+'.done'];render();save()}
+  if(d.act==='addiv'){const l=S.iv[S.iv.length-1],id='i'+Date.now();S.iv.push({id});if(l)S.v['iv'+id+'p']=S.v['iv'+l.id+'p'];S.v['iv'+id+'n']='1';render();save()}
+  if(d.act==='dupsan'){(S.san[d.r]=S.san[d.r]||[]).push(uid());render();save()}
+  if(d.act==='delsan'){S.san[d.r]=(S.san[d.r]||[]).filter(x=>x!==d.id);render();save()}
+  if(d.act==='deliv'){S.iv=S.iv.filter(r=>r.id!==d.r);delete S.ph['iv'+d.r];render();save();savePh()}
+  if(d.act==='addan'){S.an.push({id:'a'+Date.now(),n:'Élément'});render();save()}
+  if(d.act==='delan'){S.an=S.an.filter(o=>o.id!==d.r);render();save()}
+  if(d.act==='dupan'){const i=S.an.findIndex(o=>o.id===d.r);S.an.splice(i+1,0,{id:'a'+Date.now(),n:S.an[i].n});render();save()}
+  if(d.act==='addkl'){S.kl.push({id:'k'+Date.now(),n:''});render();save()}
+  if(d.act==='delkl'){S.kl=S.kl.filter(o=>o.id!==d.r);render();save()}
+  if(d.act==='dupkl'){const i=S.kl.findIndex(o=>o.id===d.r);S.kl.splice(i+1,0,{id:'k'+Date.now(),n:S.kl[i].n});render();save()}
+  if(d.act==='rmph'){S.ph[d.r].splice(+d.i,1);const el=document.getElementById('phs-'+d.r)||$('#phs');if(el)el.innerHTML=phView(d.r);savePh()}
+  if(d.act==='clr'){delete S.v[d.k];save();sigInit()}
+  if(d.act==='lock'){if(!S.v[d.k]){msg('Signe d’abord avant de valider');return}S.v[d.k+'lock']=true;save();render()}
+  if(d.act==='unlock'){delete S.v[d.k+'lock'];save();render()}
+  if(d.act==='cmpToggle'){cmpShowAll=!cmpShowAll;render()}
+  if(d.act==='cmpClear'){if(a.dataset.ok!=='1'){a.dataset.ok='1';a.textContent='Confirmer l’effacement';return}S.baseline=null;S.tab='gen';render();save()}
+  if(d.act==='expDecompte'){exportDecompte()}
+  if(d.act==='goChif'){S.tab='chif';chifAutoFill();return}
+  if(d.act==='chifAuto'){chifAutoFill();return}
+  if(d.act==='chifRecalc'){chifRecalc();render();save();return}
+  if(d.act==='chifClear'){if(a.dataset.ok!=='1'){a.dataset.ok='1';a.textContent='Confirmer l’effacement';return}S.chif={rooms:[],nextRoomId:1,nextLineId:1};render();save();return}
+  if(d.act==='chifAddRoom'){ensureChif();const n=prompt('Nom de la pièce :','');if(!n||!n.trim())return;S.chif.rooms.push({id:S.chif.nextRoomId++,name:n.trim(),lines:[]});render();save();return}
+  if(d.act==='chifDelRoom'){ensureChif();S.chif.rooms=S.chif.rooms.filter(r=>String(r.id)!==String(d.r));render();save();return}
+  if(d.act==='chifAddLine'||d.act==='chifAddLineIn'){ensureChif();let room=d.r?S.chif.rooms.find(r=>String(r.id)===String(d.r)):S.chif.rooms[S.chif.rooms.length-1];if(!room){room={id:S.chif.nextRoomId++,name:'Divers',lines:[]};S.chif.rooms.push(room)}room.lines.push({id:S.chif.nextLineId++,lib:'Intervention libre',qty:1,unit:'u',prix:0,etat:'BE',coef:1,typeT:1,grille:null,srcName:'',srcObs:'',suggestions:[]});render();save();return}
+  if(d.act==='chifDelLine'){ensureChif();const room=S.chif.rooms.find(r=>String(r.id)===String(d.r));if(room)room.lines=room.lines.filter(l=>String(l.id)!==String(d.id));render();save();return}
+  if(d.act==='chifPick'){ensureChif();const room=S.chif.rooms.find(r=>String(r.id)===String(d.r));const line=room&&room.lines.find(l=>String(l.id)===String(d.id));if(!line||!line.suggestions)return;const item=line.suggestions[+d.si];if(!item)return;line.grille=item;line.lib=item.lib;line.prix=item.prix;line.unit=item.unit||'u';line.coef=computeCoef(item,line.etat,line.typeT);render();save();return}
+  if(d.act==='chifAddFromCat'){ensureChif();const item=GRILLE[+d.gi];if(!item)return;let room=S.chif.rooms[S.chif.rooms.length-1];if(!room){room={id:S.chif.nextRoomId++,name:'Divers',lines:[]};S.chif.rooms.push(room)}const typeT=item.V!=null?2:1;room.lines.push({id:S.chif.nextLineId++,lib:item.lib,qty:1,unit:item.unit||'u',prix:item.prix||0,etat:'BE',coef:computeCoef(item,'BE',typeT),typeT,grille:item,srcName:'',srcObs:'',suggestions:[]});render();save();return}
+  if(d.act==='chifExport'){chifExportDoc();return}
+  if(d.act==='chifPrint'){const raw=chifBuildDoc();const body=raw.replace(/^[\s\S]*?<body>/i,'').replace(/<\/body>[\s\S]*$/i,'');$('#recap').innerHTML=body;$('#recap').classList.add('show');$('#rcls').style.display='block';scrollTo(0,0);return}
+  if(d.act==='catAdd'){
+    const cats0=catCategories();
+    const defaultCat=cats0[0]||'Divers';
+    GRILLE.push({cat:defaultCat,lib:'Nouveau poste',prix:0,unit:'u',V:null,F:null,A:null,R:null,DQPR:null,VT:null});
+    catEdit=GRILLE.length-1;catQ='Nouveau poste';catCat='';saveGrille();render();return}
+  if(d.act==='catEdit'){catEdit=+d.i;render();scrollTo(0,0);return}
+  if(d.act==='catEditClose'){catEdit=-1;render();return}
+  if(d.act==='catSave'){
+    if(catEdit<0||!GRILLE[catEdit])return;
+    const box=document.querySelectorAll('[data-catedit]');
+    const g=GRILLE[catEdit];
+    let catVal='',catNew='';
+    box.forEach(el=>{
+      const k=el.dataset.catedit;let v=el.value;
+      if(k==='cat')catVal=v;
+      else if(k==='catNew')catNew=v;
+      else if(k==='prix')g.prix=parseFloat(v)||0;
+      else if(k==='V'||k==='F'||k==='A'||k==='R'||k==='DQPR'||k==='VT')g[k]=(v===''||v==null)?null:(parseFloat(v));
+      else if(k==='lib'||k==='unit')g[k]=v;
+    });
+    if(catVal==='__new__'){
+      const name=(catNew||'').trim().replace(/\s+/g,' ');
+      if(!name){msg('Indique le nom de la nouvelle catégorie');return}
+      const existing=catCategories().find(c=>c.toLowerCase()===name.toLowerCase());
+      g.cat=existing||name;
+    } else {
+      g.cat=catVal;
+    }
+    saveGrille();catEdit=-1;render();return}
+  if(d.act==='catDel'){
+    const i=+d.i;
+    if(!GRILLE[i])return;
+    if(!confirm('Supprimer « '+(GRILLE[i].lib||'')+' » ?'))return;
+    GRILLE.splice(i,1);catEdit=-1;saveGrille();render();return}
+  if(d.act==='catExport'){
+    const name='catalogue-grille-'+new Date().toISOString().slice(0,10)+'.json';
+    const data=JSON.stringify(GRILLE,null,2);
+    const a=document.createElement('a');a.href='data:application/json,'+encodeURIComponent(data);a.download=name;a.click();
+    msg('Catalogue exporté');return}
+  if(d.act==='catReset'){
+    if(!confirm('Revenir à la grille de base 2026 ? Tes modifications locales seront effacées.'))return;
+    localStorage.removeItem('edl1grille');loadGrille();catEdit=-1;catQ='';catCat='';render();msg('Grille de base restaurée');return}
+
+
+  if(d.act==='copy'){const val=S.v[d.src]||'';if(!val)return;
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(val).then(()=>msg('Copié')).catch(()=>msg('Copie impossible'));
+    else msg('Copie non disponible sur ce navigateur')}
+  if(d.act==='impCancel'){pendingImport=null;hideModal()}
+  if(d.act==='impAsis'){applyImport(pendingImport,false);pendingImport=null;hideModal()}
+  if(d.act==='impSortie'){applyImport(pendingImport,true);pendingImport=null;hideModal()}
+});
+function onIn(e){
+  const t=e.target;
+  if(t.classList.contains('ob'))grow(t);
+  if(t.dataset.rn){const r=S.rooms.find(x=>x.id===t.dataset.rn);r.n=t.value;save();return}
+  if(t.dataset.nmid){const arr=t.dataset.nmtag==='an'?S.an:S.kl,o=arr.find(x=>x.id===t.dataset.nmid);if(o)o.n=t.value;save();return}
+  if(t.dataset.chifroom){ensureChif();const room=S.chif.rooms.find(r=>String(r.id)===String(t.dataset.chifroom));if(room)room.name=t.value;save();return}
+  if(t.dataset.chifline){ensureChif();const parts=t.dataset.chifline.split('.');const rid=parts[0],lid=parts[1],field=parts[2];const room=S.chif.rooms.find(r=>String(r.id)===String(rid));const line=room&&room.lines.find(l=>String(l.id)===String(lid));if(!line)return;
+    if(field==='qty'||field==='prix'||field==='coef')line[field]=parseFloat(t.value)||0;
+    else if(field==='typeT'){line.typeT=parseInt(t.value)||1;line.coef=computeCoef(line.grille,line.etat,line.typeT)}
+    else if(field==='etat'){line.etat=t.value;line.coef=computeCoef(line.grille,line.etat,line.typeT)}
+    else if(field==='lib'){
+      line.lib=t.value;
+      // Recherche live dans le catalogue → nouvelles suggestions cliquables
+      const hits=searchCatalogByQuery(t.value,10);
+      line.suggestions=hits;
+      // Si correspondance exacte, associer le poste (prix/coef) sans écraser la frappe
+      const exact=hits.find(g=>g.lib.toLowerCase()===t.value.toLowerCase().trim());
+      if(exact){
+        line.grille=exact;line.prix=exact.prix;line.unit=exact.unit||'u';
+        line.coef=computeCoef(exact,line.etat,line.typeT);
+      }
+      save();
+      renderLineSuggestions(rid,lid);
+      return;
+    }
+    else line[field]=t.value;
+    save();
+    if(field==='typeT'||field==='etat')render();
+    return}
+  if(t.dataset.chifsearch){chifSearchCatalog(t.value);return}
+  if(t.dataset.catsearch){
+    catQ=t.value;
+    clearTimeout(window._catT);
+    window._catT=setTimeout(()=>{
+      const pos=t.selectionStart;
+      render();
+      const el=document.getElementById('catSearch');
+      if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch(e){}}
+    },200);
+    return}
+  if(t.dataset.catcat){catCat=t.value;render();return}
+  if(t.dataset.catedit){return}
+  if(t.dataset.k&&!t.classList.contains('c')){S.v[t.dataset.k]=t.value;save();const o=$('#tot');if(o)o.textContent=total()}
+}
+document.addEventListener('input',onIn);
+document.addEventListener('change',async e=>{
+  const t=e.target;
+  if(t.dataset.catSelect!=null||t.getAttribute('data-cat-select')!=null){
+    const wrap=document.getElementById('catNewWrap');
+    if(wrap)wrap.style.display=t.value==='__new__'?'':'none';
+    if(t.value==='__new__'){const inp=wrap&&wrap.querySelector('input');if(inp)inp.focus()}
+    return}
+  if(t.dataset.rn)tabs();
+  if(t.id==='catImp'){const f=t.files[0];if(!f)return;
+    (async()=>{
+      try{
+        const j=JSON.parse(await f.text());
+        if(!Array.isArray(j)||!j.length)throw new Error('bad');
+        if(!j.every(x=>x&&typeof x.lib==='string'))throw new Error('shape');
+        GRILLE=j.map(x=>({
+          cat:x.cat||'Divers',lib:x.lib,prix:+x.prix||0,unit:x.unit||'u',
+          V:x.V!=null?+x.V:null,F:x.F!=null?+x.F:null,A:x.A!=null?+x.A:null,R:x.R!=null?+x.R:null,
+          DQPR:x.DQPR!=null?+x.DQPR:null,VT:x.VT!=null?+x.VT:null
+        }));
+        saveGrille();catEdit=-1;render();msg('Catalogue importé ('+GRILLE.length+' postes)');
+      }catch(e){msg('Fichier catalogue invalide')}
+      t.value='';
+    })();return}
+  if(t.id==='cmpFile'){const f=t.files[0];if(!f)return;
+    try{const j=JSON.parse(await f.text());
+      if(!isObj(j))throw new Error('bad shape');
+      S.baseline=clone({v:isObj(j.v)?j.v:{},rooms:Array.isArray(j.rooms)&&j.rooms.length?j.rooms:S.rooms,x:isObj(j.x)?j.x:{},san:isObj(j.san)?j.san:{},iv:Array.isArray(j.iv)?j.iv:[],kl:Array.isArray(j.kl)&&j.kl.length?j.kl:S.kl});
+      render();save();msg('Référence chargée');
+    }catch(x){msg('Fichier invalide ou illisible')}
+    t.value='';return}
+  if(t.dataset.act==='impchk'){S.v[t.dataset.k]=t.checked;save();render();return}
+  if(t.dataset.ph){const id=t.dataset.ph;S.ph[id]=S.ph[id]||[];
+    for(const f of t.files){try{S.ph[id].push(await shrink(f))}catch(x){msg('Photo illisible')}}
+    const el=document.getElementById('phs-'+id)||$('#phs');if(el)el.innerHTML=phView(id);savePh();t.value=''}
+  else{onIn(e);if(t.tagName==='SELECT'&&/o$/.test(t.dataset.k||''))render()}
+});
+async function shrink(f){
+  const b=await createImageBitmap(f),s=Math.min(1,900/Math.max(b.width,b.height)),c=document.createElement('canvas');
+  c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);c.getContext('2d').drawImage(b,0,0,c.width,c.height);
+  return c.toDataURL('image/jpeg',.6);
+}
+function sigInit(){
+  document.querySelectorAll('canvas.sg').forEach(c=>{
+    const k=c.dataset.k,x=c.getContext('2d');c.width=c.clientWidth*2;c.height=c.clientHeight*2;
+    x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.lineWidth=4;x.lineCap='round';x.strokeStyle='#000';
+    if(S.v[k]){const im=new Image();im.onload=()=>x.drawImage(im,0,0,c.width,c.height);im.src=S.v[k]}
+    if(S.v[k+'lock'])return;
+    let on=false;const p=e=>{const r=c.getBoundingClientRect();return[(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]};
+    c.onpointerdown=e=>{on=true;c.setPointerCapture(e.pointerId);const[a,b]=p(e);x.beginPath();x.moveTo(a,b)};
+    c.onpointermove=e=>{if(!on)return;const[a,b]=p(e);x.lineTo(a,b);x.stroke()};
+    c.onpointerup=()=>{if(!on)return;on=false;S.v[k]=c.toDataURL('image/png');save()};
+  });
+}
+const STCLR={NV:'#eef1f2',NF:'#e6f2fa',BE:'#e8f5ec',EU:'#fdf3e2',ME:'#fbe9e0',HS:'#fbe4e6'};
+const STL={NV:'Non vérifié',NF:'Neuf',BE:'Bon état',EU:'État d’usage',ME:'Mauvais état',HS:'Hors service'};
+function recap(){
+  const cnt={r1:0,r2:0};const tick=s=>{if(s)cnt[s]=(cnt[s]||0)+1};
+  const row=(a,b)=>b?`<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`:'';
+  const rowS=(a,b,s)=>b?`<tr style="background:${STCLR[s]||''}"><td>${esc(a)}</td><td>${esc(b)}</td></tr>`:'';
+  const tbl=G=>G.map(([t,f])=>`<h2>${esc(t)}</h2><table>${f.map(([k,l])=>row(l,S.v[k])).join('')}</table>`).join('');
+  const typ=[S.v.sensE&&'Entrant',S.v.sensS&&'Sortant'].filter(Boolean).join(' + ')||'—';
+  let h=`<div class="hdband"><span class="brand">EDL 06 IMMO</span><span class="sub">Constat d’état des lieux</span></div><table>${row('Type d’état des lieux',typ)}</table>${tbl(GEN)}<h2>Compteurs</h2><table>${S.cp.map(c=>{const k='cp'+c.id,l=MT[c.t];return row(c.t+(S.v[k+'n']?' n° '+S.v[k+'n']:'')+(S.v[k+'e']?' ('+S.v[k+'e']+')':''),[S.v[k+'a']&&l[0]+' : '+S.v[k+'a'],S.v[k+'b']&&l[1]+' : '+S.v[k+'b']].filter(Boolean).join(' — '))}).join('')}</table>${tbl(CPT)}`;
+  const line=(p,key,def)=>{const [n,o,cn,chk,dp,cond]=def,k=p+'.'+key,s=S.v[k+'s'],b=S.v[k+'b'];
+    const ty=[S.v[k+'o'],S.v[k+'o2'],...(cn||[]).map((c,j)=>S.v[k+'c'+j]?c+' '+S.v[k+'c'+j]:''),...(chk||[]).map((c,j)=>S.v[k+'x'+j]?c:''),cond&&S.v[k+'cc']?cond.label+' '+S.v[k+'cc']:''].filter(Boolean).join(', ');
+    if(!(s||b||ty||S.v[k+'t']||S.v[k+'1']||S.v[k+'2']))return '';
+    tick(s);if(S.v[k+'1'])cnt.r1++;if(S.v[k+'2'])cnt.r2++;
+    return `<tr style="background:${STCLR[s]||''}"><td>${esc(n)}</td><td>${esc(ty)}</td><td>${esc(s||'')}</td><td>${esc(S.v[k+'t']||'')}</td><td>${S.v[k+'1']?'×':''}</td><td>${S.v[k+'2']?'×':''}</td><td>${esc(b||'')}</td></tr>`};
+  const th='<tr><th>Élément</th><th>Détail</th><th>État</th><th>TrCh</th><th>1</th><th>2</th><th>Observations</th></tr>';
+  const sanRowGen=(k,n)=>{const s=S.v[k+'s'];tick(s);return rowS(n,[S.v[k+'r'],s,...SC.map((c,j)=>S.v[k+j]&&c+' '+S.v[k+j]),S.v[k+'b']].filter(Boolean).join(' · '),s)};
+  const snr=id=>SN.map((n,i)=>sanRowGen('sn'+id+'.'+i+'.',n)).join('')+(S.san[id]||[]).map(eid=>sanRowGen('sn'+id+'.x'+eid+'.','Lavabo')).join('');
+  const wcr=id=>{const k='wcg'+id+'.';WCF.forEach((c,j)=>tick(S.v[k+j]));return row('WC',[...WCF.map((c,j)=>S.v[k+j]&&c+' '+S.v[k+j]),S.v[k+'b']].filter(Boolean).join(' · '))};
+  const lavR=id=>{const k='wcs'+id+'.',s=S.v[k+'s'];tick(s);return rowS('Lave-main',[S.v[k+'r'],s,...SC_LAV.map((c,j)=>S.v[k+j]&&c+' '+S.v[k+j]),S.v[k+'b']].filter(Boolean).join(' · '),s)};
+  S.rooms.forEach(r=>{const ex=S.x[r.id]||[];
+    h+=`<h2>${esc(r.n)}</h2><table>${th}${r.t==='wc'?wcr(r.id)+lavR(r.id):''}${TPL[r.t].i.map((x,i)=>line(r.id,'t'+i,x)+ex.filter(e=>e.base===x[0]).map(e=>line(r.id,e.id,[e.n,e.o,e.c,e.k])).join('')).join('')}${ex.filter(e=>!e.base).map(e=>line(r.id,e.id,[e.n,e.o,e.c,e.k])).join('')}</table>${r.t==='sdb'?`<table>${snr(r.id)}</table>`:''}${(S.ph[r.id]||[]).map(d=>`<img src="${d}">`).join('')}`});
+  if(S.iv.length)h+=`<h2>Inventaire du mobilier</h2><p>Entrée : ${esc(S.v.ive||'')} — Sortie : ${esc(S.v.ivs||'')}</p><table><tr><th>Pièce</th><th>Description</th><th>Nbre</th><th>État</th><th>Aspect</th><th>Observations</th><th>1</th><th>2</th></tr>${S.iv.map(r=>{const k='iv'+r.id;tick(S.v[k+'s']);if(S.v[k+'1'])cnt.r1++;if(S.v[k+'2'])cnt.r2++;return `<tr style="background:${STCLR[S.v[k+'s']]||''}">${['p','d','n','s','a','b'].map(x=>`<td>${esc(S.v[k+x]||'')}</td>`).join('')}<td>${S.v[k+'1']?'×':''}</td><td>${S.v[k+'2']?'×':''}</td></tr>`}).join('')}</table>${S.iv.map(r=>(S.ph['iv'+r.id]||[]).map(d=>`<img src="${d}">`).join('')).join('')}${(S.ph.inv||[]).map(d=>`<img src="${d}">`).join('')}`;
+  h+=`<h2>Annexes</h2><table>${S.an.map(o=>{const k='an'+o.id+'.';return row(o.n+(S.v[k+'num']?' n° '+S.v[k+'num']:''),[S.v[k+'p']&&'porte '+S.v[k+'p'],S.v[k+'s']&&'serrure '+S.v[k+'s'],S.v[k+'m']&&'à vider '+S.v[k+'m'],S.v[k+'b']].filter(Boolean).join(' · '))}).join('')}</table>${(S.ph.ann||[]).map(d=>`<img src="${d}">`).join('')}`;
+  h+=`<h2>Clés</h2><table>${S.kl.map(o=>{const k='kl'+o.id+'.';return row(o.n||'Clé',[S.v[k+'q']&&('qté '+S.v[k+'q']),S.v[k+'s']].filter(Boolean).join(' · '))}).join('')}${row('Total',String(total()))}${row('Observations',S.v.clesgb)}</table>${(S.ph.cles||[]).map(d=>`<img src="${d}">`).join('')}`;
+  if(isSortant())h+=`<h2>Nettoyage général</h2><table>${row('État',S.v.net)}${row('Observations',S.v.netgb)}</table>`;
+  h+=`<h2>Signatures</h2><table>${row('Date d’entrée',S.v.dent)}${row('Commentaire du locataire',S.v.com)}</table>`;
+  SIG.forEach(([k,l,d])=>{if(S.v[k]||nm(k,d))h+=`<p>${esc(l)} ${esc(nm(k,d))}${k==='sgX'?'<br>'+esc(S.v.sgXadr||'485, chemin Thomas Garbies 06610 La Gaude'):''}<br>${S.v[k]?`<img src="${S.v[k]}" style="max-width:260px;border:1px solid #999">`:''}</p>`});
+  h+=`<h2>Légende</h2><p style="font-size:13px;color:#5d6d76">États : NV non vérifié · NF neuf · BE bon état · EU état d’usage · ME mauvais état · HS hors service<br>
+    TrCh : Trous de Chevilles<br>TDH : Traces D’Habitation<br>TDHP : Traces D’Habitation Prononcées<br>DDE : Dégât Des Eaux<br>
+    1 = à réparer ou changer · 2 = à nettoyer</p>`;
+  const sum=Object.keys(STL).map(k=>cnt[k]?`<span class="sc" style="background:${STCLR[k]}">${cnt[k]} ${STL[k]}</span>`:'').join('')
+    +(cnt.r1?`<span class="sc" style="background:${STCLR.ME}">${cnt.r1} à réparer</span>`:'')
+    +(cnt.r2?`<span class="sc" style="background:${STCLR.NV}">${cnt.r2} à nettoyer</span>`:'');
+  const bandEnd=h.indexOf('</div>')+6;
+  return h.slice(0,bandEnd)+(sum?`<div class="sum">${sum}</div>`:'')+h.slice(bandEnd);
+}
+function buildDoc(){
+  const h=recap();
+  return '<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>État des lieux — EDL 06 IMMO</title><style>body{font:14px/1.4 system-ui,sans-serif;margin:20px;color:#17252d;max-width:900px}table{border-collapse:separate;border-spacing:0 6px;width:100%;margin:6px 0 16px;font-size:13px}td,th{border:1px solid #e2e6e8;padding:7px 9px;text-align:left;vertical-align:top}tr td:first-child,tr th:first-child{border-radius:8px 0 0 8px}tr td:last-child,tr th:last-child{border-radius:0 8px 8px 0}th{background:#eef3f5;font-weight:600}h2{margin:20px 0 4px;font-size:17px}img{max-width:160px;margin:3px;border-radius:6px}.hdband{background:#0e6d8c;color:#fff;border-radius:12px;padding:18px 22px;margin-bottom:14px}.hdband .brand{font-weight:800;font-size:22px;letter-spacing:.06em;display:block}.hdband .sub{font-size:13px;opacity:.9}.sum{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}.sc{font-size:12px;padding:5px 10px;border-radius:20px;color:#333;font-weight:500}@media print{body{margin:8mm}}</style><body>'+h;
+}
+const docName=()=>(S.v.rdv?S.v.rdv+' ':'')+'EDL.html';
+$('#exp').onclick=async()=>{
+  const doc=buildDoc(),name=docName();
+  try{const d=window.claude&&await claude.use('downloads');
+    if(d){await d.save({filename:name,data:doc});return}}catch(e){if(e&&e.code==='declined')return}
+  const blob=new Blob([doc],{type:'text/html'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();
+};
+$('#neu').onclick=()=>{
+  if($('#neu').dataset.ok!=='1'){$('#neu').dataset.ok='1';$('#neu').textContent='Confirmer (efface tout)';
+    setTimeout(()=>{$('#neu').dataset.ok='';$('#neu').textContent='Nouveau'},4000);return}
+  S=fresh();S.ph={};$('#recap').classList.remove('show');$('#rcls').style.display='none';
+  render();save();savePh();$('#neu').dataset.ok='';$('#neu').textContent='Nouveau';
+};
+$('#ape').onclick=()=>{$('#recap').innerHTML=recap();$('#recap').classList.add('show');$('#rcls').style.display='block';scrollTo(0,0)};
+$('#shr').onclick=async()=>{
+  const doc=buildDoc(),name=docName();
+  const file=new File([doc],name,{type:'text/html'});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file],title:'État des lieux — EDL 06 IMMO',text:'Constat d’état des lieux'});return}
+    catch(e){if(e&&e.name==='AbortError')return;msg('Partage annulé')}
+  }else{
+    msg('Partage natif non disponible — utilise Exporter puis joins le fichier toi-même');
+  }
+};
+$('#rcls').onclick=()=>{$('#recap').classList.remove('show');$('#recap').innerHTML='';$('#rcls').style.display='none'};
+$('#expj').onclick=async()=>{
+  const name='EDL_'+(S.v.date||new Date().toISOString().slice(0,10))+'.json';
+  const data=JSON.stringify({v:S.v,rooms:S.rooms,cp:S.cp,x:S.x,iv:S.iv,an:S.an,kl:S.kl,ph:S.ph,san:S.san,baseline:S.baseline,chif:S.chif});
+  try{const d=window.claude&&await claude.use('downloads');if(d){await d.save({filename:name,data});return}}catch(e){}
+  const a=document.createElement('a');a.href='data:application/json,'+encodeURIComponent(data);a.download=name;a.click();
+};
+let pendingImport=null;
+function showModal(html){$('#modalBody').innerHTML=html;$('#modal').classList.add('show')}
+function hideModal(){$('#modal').classList.remove('show');$('#modalBody').innerHTML=''}
+function isObj(x){return x&&typeof x==='object'&&!Array.isArray(x)}
+function applyImport(j,toSortie){
+  if(!isObj(j)){msg('Fichier invalide : ce n’est pas un EDL exporté par cette app');return}
+  const rooms=Array.isArray(j.rooms)&&j.rooms.length?j.rooms:S.rooms;
+  const cp=Array.isArray(j.cp)&&j.cp.length?j.cp:S.cp;
+  const iv=Array.isArray(j.iv)?j.iv:[];
+  const an=Array.isArray(j.an)&&j.an.length?j.an:S.an;
+  const kl=Array.isArray(j.kl)&&j.kl.length?j.kl:S.kl;
+  const v=isObj(j.v)?j.v:{};
+  const x=isObj(j.x)?j.x:{};
+  const san=isObj(j.san)?j.san:{};
+  const ph=isObj(j.ph)?j.ph:{};
+  try{
+    const newBaseline=toSortie?clone({v,rooms,x,san,iv,kl}):(isObj(j.baseline)?clone(j.baseline):null);
+    S.v=v;S.rooms=rooms;S.cp=cp;S.x=x;S.iv=iv;S.san=san;S.an=an;S.kl=kl;S.ph=ph;
+    S.baseline=newBaseline;S.chif=isObj(j.chif)?j.chif:null;
+    if(toSortie){
+      S.v.sensS=true;delete S.v.sensE;
+      if(S.v.ent)S.v.sor=S.v.ent;if(S.v.entem)S.v.sorem=S.v.entem;if(S.v.entte)S.v.sorte=S.v.entte;
+      delete S.v.ent;delete S.v.entem;delete S.v.entte;
+      S.ph={};
+      SIG.forEach(([k])=>{delete S.v[k]});
+      S.rooms.forEach(r=>{delete S.v[r.id+'.done']});
+      if(!S.v.dent&&S.v.date)S.v.dent=S.v.date;
+      delete S.v.rdv;delete S.v.date;delete S.v.heure;
+    }
+    S.tab='gen';render();save();savePh();
+    msg(toSortie?'Repris pour la sortie — relis chaque pièce':'EDL rouvert');
+  }catch(e){
+    console.error(e);
+    msg('Import impossible — fichier illisible ou incompatible');
+  }
+}
+async function exportDecompte(){
+  const list=compareList().filter(x=>x.status==='deg'&&S.v[x.sk+'imp']);
+  if(!list.length){msg('Aucune dégradation imputable à exporter');return}
+  let total=0;
+  const rows=list.map(x=>{const c=parseFloat(S.v[x.sk+'cout'])||0;total+=c;
+    const bv=(S.baseline&&S.baseline.v)||{};
+    const oi=x.obsKey?(bv[x.obsKey]||''):'';
+    const oo=x.obsKey?(S.v[x.obsKey]||''):'';
+    const obsCell=[oi&&('Entrée : '+oi),oo&&('Sortie : '+oo)].filter(Boolean).join(' | ');
+    return `<tr><td>${esc(x.roomLabel)}</td><td>${esc(x.name)}</td><td>${esc(x.s1||'—')}</td><td>${esc(x.s2||'—')}</td><td>${esc(obsCell)}</td><td style="text-align:right">${c.toFixed(2)} €</td></tr>`;
+  }).join('');
+  const h=`<div class="hdband"><span class="brand">EDL 06 IMMO</span><span class="sub">Décompte de retenue sur dépôt de garantie</span></div>
+    <table><tr><th>Bien</th><td>${esc(S.v.adr||'')}</td></tr><tr><th>Locataire sortant</th><td>${esc(S.v.sor||'')}</td></tr><tr><th>N° RDV</th><td>${esc(S.v.rdv||'')}</td></tr><tr><th>Date</th><td>${esc(S.v.date||'')}</td></tr></table>
+    <table><tr><th>Pièce</th><th>Élément</th><th>État entrée</th><th>État sortie</th><th>Observations</th><th>Coût</th></tr>${rows}</table>
+    <h2>Total retenu : ${total.toFixed(2).replace('.',',')} €</h2>`;
+  const name=(S.v.rdv?S.v.rdv+' ':'')+'Décompte.html';
+  const doc='<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Décompte — EDL 06 IMMO</title><style>body{font:14px/1.4 system-ui,sans-serif;margin:20px;color:#17252d;max-width:900px}table{border-collapse:separate;border-spacing:0 6px;width:100%;margin:6px 0 16px;font-size:13px}td,th{border:1px solid #e2e6e8;padding:7px 9px;text-align:left;vertical-align:top}th{background:#eef3f5;font-weight:600}.hdband{background:#0e6d8c;color:#fff;border-radius:12px;padding:18px 22px;margin-bottom:14px}.hdband .brand{font-weight:800;font-size:22px;letter-spacing:.06em;display:block}.hdband .sub{font-size:13px;opacity:.9}</style><body>'+h;
+  try{const d=window.claude&&await claude.use('downloads');if(d){await d.save({filename:name,data:doc});return}}catch(e){if(e&&e.code==='declined')return}
+  const blob=new Blob([doc],{type:'text/html'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();
+}
+$('#imp').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{pendingImport=JSON.parse(await f.text())}catch(x){msg('Fichier illisible');e.target.value='';return}
+  showModal(`<h3 class="strong">Que veux-tu faire de ce fichier ?</h3>
+    <p class="lg">Choisis selon l’usage de cet EDL.</p>
+    <div class="act" style="flex-direction:column;align-items:stretch">
+      <button class="btn p sm" data-act="impSortie">Préparer la sortie<br><span style="font-weight:400;font-size:12px">Locataire entrant → sortant, photos et signatures effacées, N° RDV/date/heure vidés</span></button>
+      <button class="btn sm" data-act="impAsis">Modifier cet EDL tel quel<br><span style="font-weight:400;font-size:12px">Rien n’est modifié, y compris photos et signatures</span></button>
+      <button class="btn d sm" data-act="impCancel">Annuler</button>
+    </div>`);
+  e.target.value='';
+};
+$('#qb').innerHTML=QB.map(x=>`<button>${esc(x)}</button>`).join('');
+$('#qb').addEventListener('pointerdown',e=>e.preventDefault());
+$('#qb').addEventListener('click',e=>{const b=e.target.closest('button'),t=document.activeElement;if(!b||!t||!t.classList.contains('ob'))return;
+  const v=t.value,p=t.selectionStart??v.length,s=(v&&!/[\s\/(]$/.test(v.slice(0,p))?' ':'')+b.textContent;
+  t.setRangeText(s,p,t.selectionEnd??p,'end');S.v[t.dataset.k]=t.value;grow(t);save()});
+document.addEventListener('focusin',e=>{$('#qb').style.display=e.target.classList&&e.target.classList.contains('ob')?'flex':'none'});
+render();
+</script>
+</body>
+</html>
