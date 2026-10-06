@@ -1,5 +1,5 @@
 /* EDL 06 IMMO — service worker (cache offline) */
-const CACHE = 'edl-06-immo-v4';
+const CACHE = 'edl-06-immo-v5';
 const ASSETS = [
   './',
   './index.html',
