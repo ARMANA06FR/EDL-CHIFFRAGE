@@ -146,8 +146,8 @@ const TPL={
  ext:{l:'Jardin / extérieur',i:[['Pelouse'],['Allées'],['Haies',['≤ 2 m','> 2 m']],['Terrasses'],['Arbres / plantes'],['Façade'],['Auvent'],['Pergolas'],PRI,ECL,['Grillage'],['Murs de clôture'],['Portail d’entrée'],['Autre portail'],['Divers']]}
 };
 const GEN=[
-['Rendez-vous',[['client','Client (propriétaire)'],['cliente','E-mail client'],['clientte','Téléphone client'],['rdv','N° RDV'],['date','Date','date'],['heure','Heure','time'],['cadr','Adresse du client'],['ccp','Code postal'],['cville','Ville']]],
-['Logement',[['typ','Type (T2, T3…)'],['etage','Étage'],['digi','Digicode'],['hp','H/plafond'],['adr','Adresse du logement'],['cp','Code postal'],['ville','Ville'],['meub','Logement',['Vide','Meublé']],['inv','Inventaire',['À établir','À contrôler','À ignorer']]]],
+['Rendez-vous',[['statut','Statut',['Professionnel de l’immobilier','Bailleur social','Propriétaire bailleur','Locataire']],['client','Client'],['cliente','E-mail client'],['clientte','Téléphone client'],['rdv','N° RDV'],['date','Date','date'],['heure','Heure','time'],['cadr','Adresse du client'],['ccp','Code postal'],['cville','Ville']]],
+['Logement',[['prop','Nom du propriétaire'],['typ','Type (T2, T3…)'],['etage','Étage'],['digi','Digicode'],['hp','H/plafond'],['adr','Adresse du logement'],['cp','Code postal'],['ville','Ville'],['meub','Logement',['Vide','Meublé']],['inv','Inventaire',['À établir','À contrôler','À ignorer']]]],
 ['Locataires',[['ent','Locataire entrant'],['entem','E-mail entrant'],['entte','Téléphone entrant'],['sor','Locataire sortant'],['sorem','E-mail sortant'],['sorte','Téléphone sortant'],['nadr','Nouvelle adresse du sortant'],['ncp','Code postal'],['nville','Ville']]]];
 const CPT=[
 ['Équipements',[['ecs','Eau chaude',['Cumulus','Chauffe-eau gaz','Collectif']],['ecsm','Marque / modèle'],['chf','Chauffage',['Indiv. élec.','Indiv. gaz','Collectif']],['daaf','DAAF',['Oui','Non']],['daafl','Emplacement DAAF'],['cert','Certificat d’entretien',['Oui','Non']],['coupe','Alimentation coupée (sous réserve)',['Aucune','Eau','Électricité','Eau + élec.']]]],
@@ -1420,6 +1420,110 @@ $('#qb').addEventListener('click',e=>{const b=e.target.closest('button'),t=docum
   const v=t.value,p=t.selectionStart??v.length,s=(v&&!/[\s\/(]$/.test(v.slice(0,p))?' ':'')+b.textContent;
   t.setRangeText(s,p,t.selectionEnd??p,'end');S.v[t.dataset.k]=t.value;grow(t);save()});
 document.addEventListener('focusin',e=>{$('#qb').style.display=e.target.classList&&e.target.classList.contains('ob')?'flex':'none'});
+
+// ===== Pré-remplissage automatique depuis les paramètres d'URL (Jotform) =====
+(function prefillFromURL() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.size === 0) return;
+
+    const get = (key) => {
+      const val = params.get(key);
+      return val ? decodeURIComponent(val.replace(/\+/g, ' ')).trim() : '';
+    };
+
+    let filled = 0;
+
+    if (get('rdv')) { S.v.rdv = get('rdv'); filled++; }
+
+    // Date + Heure (format "Oct 08, 2026 09:30-11:00")
+    const rawDate = get('date');
+    if (rawDate) {
+      const m = rawDate.match(/([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})\s+(\d{1,2}:\d{2})/);
+      if (m) {
+        const months = {jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+        const month = months[m[1].toLowerCase().slice(0,3)];
+        if (month) {
+          S.v.date = m[3] + '-' + String(month).padStart(2,'0') + '-' + String(m[2]).padStart(2,'0');
+          S.v.heure = m[4];
+          filled += 2;
+        } else {
+          S.v.date = rawDate;
+          filled++;
+        }
+      } else {
+        S.v.date = rawDate;
+        filled++;
+      }
+    }
+    if (get('heure') && get('heure') !== 'Array') {
+      S.v.heure = get('heure');
+      filled++;
+    }
+
+    // Statut (boutons)
+    if (get('statut')) { S.v.statut = get('statut'); filled++; }
+
+    // Client
+    if (get('client')) { S.v.client = get('client'); filled++; }
+    if (get('cliente')) { S.v.cliente = get('cliente'); filled++; }
+    if (get('clientte')) { S.v.clientte = get('clientte'); filled++; }
+
+    // Nom du propriétaire
+    if (get('prop')) { S.v.prop = get('prop'); filled++; }
+
+    // Adresse / ville
+    if (get('adr')) { S.v.adr = get('adr'); filled++; }
+    const villeRaw = get('ville');
+    if (villeRaw) {
+      if (villeRaw.includes('\t')) {
+        const parts = villeRaw.split('\t');
+        S.v.cp = parts[0].trim();
+        S.v.ville = parts[1] ? parts[1].trim() : '';
+      } else if (/^\d{5}/.test(villeRaw)) {
+        S.v.cp = villeRaw.substring(0, 5);
+        S.v.ville = villeRaw.substring(5).trim();
+      } else {
+        S.v.ville = villeRaw;
+      }
+      filled++;
+    }
+    if (get('cp')) { S.v.cp = get('cp'); filled++; }
+
+    if (get('meub')) { S.v.meub = get('meub'); filled++; }
+    if (get('typ')) { S.v.typ = get('typ'); filled++; }
+    if (get('etage')) { S.v.etage = get('etage'); filled++; }
+
+    // Locataires
+    if (get('ent')) { S.v.ent = get('ent'); filled++; }
+    if (get('entem')) { S.v.entem = get('entem'); filled++; }
+    if (get('entte')) { S.v.entte = get('entte'); filled++; }
+    if (get('sor')) { S.v.sor = get('sor'); filled++; }
+    if (get('sorem')) { S.v.sorem = get('sorem'); filled++; }
+    if (get('sorte')) { S.v.sorte = get('sorte'); filled++; }
+
+    // Type EDL
+    if (get('sensE') === '1' || get('type') === 'entree') {
+      S.v.sensE = true;
+      delete S.v.sensS;
+      filled++;
+    }
+    if (get('sensS') === '1' || get('type') === 'sortie') {
+      S.v.sensS = true;
+      delete S.v.sensE;
+      filled++;
+    }
+
+    if (filled > 0) {
+      S.tab = 'gen';
+      try { save(); } catch(e) {}
+      try { msg(filled + ' champ(s) pré-rempli(s) depuis Jotform'); } catch(e) {}
+    }
+  } catch(e) {
+    console.error('Erreur prefillFromURL', e);
+  }
+})();
+
 render();
 </script>
 </body>
