@@ -1434,25 +1434,46 @@ document.addEventListener('focusin',e=>{$('#qb').style.display=e.target.classLis
 
     let filled = 0;
 
-    if (get('rdv'))       { S.v.rdv = get('rdv'); filled++; }
-    if (get('date'))      { S.v.date = get('date'); filled++; }
-    if (get('heure'))     { S.v.heure = get('heure'); filled++; }
-    if (get('client'))    { S.v.client = get('client'); filled++; }
-    if (get('cliente'))   { S.v.cliente = get('cliente'); filled++; }
-    if (get('clientte'))  { S.v.clientte = get('clientte'); filled++; }
-    if (get('adr'))       { S.v.adr = get('adr'); filled++; }
-    if (get('meub'))      { S.v.meub = get('meub'); filled++; }
-    if (get('typ'))       { S.v.typ = get('typ'); filled++; }
-    if (get('etage'))     { S.v.etage = get('etage'); filled++; }
+    // N° RDV
+    if (get('rdv')) { S.v.rdv = get('rdv'); filled++; }
 
-    if (get('ent'))       { S.v.ent = get('ent'); filled++; }
-    if (get('entem'))     { S.v.entem = get('entem'); filled++; }
-    if (get('entte'))     { S.v.entte = get('entte'); filled++; }
+    // Date + Heure (Jotform envoie souvent "Oct 08, 2026 09:30-11:00")
+    const rawDate = get('date');
+    if (rawDate) {
+      // Essaie de parser le format anglais "Oct 08, 2026 09:30-11:00"
+      const m = rawDate.match(/([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})\s+(\d{1,2}:\d{2})/);
+      if (m) {
+        const months = {jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+        const month = months[m[1].toLowerCase().slice(0,3)];
+        if (month) {
+          S.v.date = m[3] + '-' + String(month).padStart(2,'0') + '-' + m[2].padStart(2,'0');
+          S.v.heure = m[4];
+          filled += 2;
+        } else {
+          S.v.date = rawDate;
+          filled++;
+        }
+      } else {
+        // Format déjà correct (YYYY-MM-DD)
+        S.v.date = rawDate;
+        filled++;
+      }
+    }
 
-    if (get('sor'))       { S.v.sor = get('sor'); filled++; }
-    if (get('sorem'))     { S.v.sorem = get('sorem'); filled++; }
-    if (get('sorte'))     { S.v.sorte = get('sorte'); filled++; }
+    if (get('heure') && get('heure') !== 'Array') {
+      S.v.heure = get('heure');
+      filled++;
+    }
 
+    // Client / Propriétaire
+    if (get('client')) { S.v.client = get('client'); filled++; }
+    if (get('cliente')) { S.v.cliente = get('cliente'); filled++; }
+    if (get('clientte')) { S.v.clientte = get('clientte'); filled++; }
+
+    // Adresse
+    if (get('adr')) { S.v.adr = get('adr'); filled++; }
+
+    // Ville + Code postal
     const villeRaw = get('ville');
     if (villeRaw) {
       if (villeRaw.includes('\t')) {
@@ -1467,12 +1488,26 @@ document.addEventListener('focusin',e=>{$('#qb').style.display=e.target.classLis
       }
       filled++;
     }
+    if (get('cp')) { S.v.cp = get('cp'); filled++; }
 
-    if (get('cp')) {
-      S.v.cp = get('cp');
-      filled++;
-    }
+    // Meublé / Vide
+    if (get('meub')) { S.v.meub = get('meub'); filled++; }
 
+    // Étage
+    if (get('etage')) { S.v.etage = get('etage'); filled++; }
+    if (get('typ')) { S.v.typ = get('typ'); filled++; }
+
+    // Locataire entrant
+    if (get('ent')) { S.v.ent = get('ent'); filled++; }
+    if (get('entem')) { S.v.entem = get('entem'); filled++; }
+    if (get('entte')) { S.v.entte = get('entte'); filled++; }
+
+    // Locataire sortant
+    if (get('sor')) { S.v.sor = get('sor'); filled++; }
+    if (get('sorem')) { S.v.sorem = get('sorem'); filled++; }
+    if (get('sorte')) { S.v.sorte = get('sorte'); filled++; }
+
+    // Type d'EDL
     if (get('sensE') === '1' || get('type') === 'entree') {
       S.v.sensE = true;
       delete S.v.sensS;
@@ -1493,7 +1528,6 @@ document.addEventListener('focusin',e=>{$('#qb').style.display=e.target.classLis
     console.error('Erreur prefillFromURL', e);
   }
 })();
-
 render();
 </script>
 </body>
