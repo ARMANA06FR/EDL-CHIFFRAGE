@@ -789,6 +789,88 @@ function loadLS(){
   if(!isObj(S.ph))S.ph={};
 }
 loadLS();
+// ===== Pré-remplissage automatique depuis les paramètres d'URL (Jotform) =====
+(function prefillFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.size === 0) return;
+
+  // Helper
+  const get = (key) => {
+    const val = params.get(key);
+    return val ? decodeURIComponent(val.replace(/\+/g, ' ')).trim() : '';
+  };
+
+  let filled = 0;
+
+  // --- Mapping principal ---
+  if (get('rdv'))          { S.v.rdv = get('rdv'); filled++; }
+  if (get('date'))         { S.v.date = get('date'); filled++; }
+  if (get('heure'))        { S.v.heure = get('heure'); filled++; }
+  if (get('client'))       { S.v.client = get('client'); filled++; }
+  if (get('cliente'))      { S.v.cliente = get('cliente'); filled++; }
+  if (get('clientte'))     { S.v.clientte = get('clientte'); filled++; }
+  if (get('adr'))          { S.v.adr = get('adr'); filled++; }
+  if (get('meub'))         { S.v.meub = get('meub'); filled++; }
+  if (get('typ'))          { S.v.typ = get('typ'); filled++; }
+  if (get('etage'))        { S.v.etage = get('etage'); filled++; }
+
+  // Locataire entrant
+  if (get('ent'))          { S.v.ent = get('ent'); filled++; }
+  if (get('entem'))        { S.v.entem = get('entem'); filled++; }
+  if (get('entte'))        { S.v.entte = get('entte'); filled++; }
+
+  // Locataire sortant (si présent)
+  if (get('sor'))          { S.v.sor = get('sor'); filled++; }
+  if (get('sorem'))        { S.v.sorem = get('sorem'); filled++; }
+  if (get('sorte'))        { S.v.sorte = get('sorte'); filled++; }
+
+  // Ville + Code postal (Jotform envoie souvent "06610	La Gaude")
+  const villeRaw = get('ville');
+  if (villeRaw) {
+    // Cas 1 : séparé par tabulation
+    if (villeRaw.includes('\t')) {
+      const parts = villeRaw.split('\t');
+      S.v.cp = parts[0].trim();
+      S.v.ville = parts[1] ? parts[1].trim() : '';
+    }
+    // Cas 2 : commence par un code postal (5 chiffres)
+    else if (/^\d{5}/.test(villeRaw)) {
+      S.v.cp = villeRaw.substring(0, 5);
+      S.v.ville = villeRaw.substring(5).trim();
+    }
+    // Cas 3 : valeur simple
+    else {
+      S.v.ville = villeRaw;
+    }
+    filled++;
+  }
+
+  // Code postal séparé (si tu l'ajoutes un jour)
+  if (get('cp')) {
+    S.v.cp = get('cp');
+    filled++;
+  }
+
+  // Type d'état des lieux
+  if (get('sensE') === '1' || get('type') === 'entree') {
+    S.v.sensE = true;
+    delete S.v.sensS;
+    filled++;
+  }
+  if (get('sensS') === '1' || get('type') === 'sortie') {
+    S.v.sensS = true;
+    delete S.v.sensE;
+    filled++;
+  }
+
+  // Si au moins un champ a été rempli
+  if (filled > 0) {
+    S.tab = 'gen';
+    render();
+    save();
+    msg(filled + ' champ(s) pré-rempli(s) depuis Jotform');
+  }
+})();
 let tm;
 function msg(t){$('#st').textContent=t;clearTimeout(tm);tm=setTimeout(()=>$('#st').textContent='',2500)}
 function save(){try{localStorage.setItem('edl1',JSON.stringify({v:S.v,rooms:S.rooms,tab:S.tab,cp:S.cp,x:S.x,iv:S.iv,an:S.an,kl:S.kl,san:S.san,baseline:S.baseline,chif:S.chif}))}catch(e){msg('Sauvegarde impossible')}}
