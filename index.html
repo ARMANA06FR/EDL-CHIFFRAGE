@@ -1281,7 +1281,7 @@ function recap(){
   const rowS=(a,b,s)=>b?`<tr style="background:${STCLR[s]||''}"><td>${esc(a)}</td><td>${esc(b)}</td></tr>`:'';
   const tbl=G=>G.map(([t,f])=>`<h2>${esc(t)}</h2><table>${f.map(([k,l])=>row(l,S.v[k])).join('')}</table>`).join('');
   const typ=[S.v.sensE&&'Entrant',S.v.sensS&&'Sortant'].filter(Boolean).join(' + ')||'—';
-  let h=`<div class="hdband"><span class="brand">EDL 06 IMMO</span><span class="sub">Constat d’état des lieux</span></div><table>${row('Type d’état des lieux',typ)}</table>${tbl(GEN)}<h2>Compteurs</h2><table>${S.cp.map(c=>{const k='cp'+c.id,l=MT[c.t];return row(c.t+(S.v[k+'n']?' n° '+S.v[k+'n']:'')+(S.v[k+'e']?' ('+S.v[k+'e']+')':''),[S.v[k+'a']&&l[0]+' : '+S.v[k+'a'],S.v[k+'b']&&l[1]+' : '+S.v[k+'b']].filter(Boolean).join(' — '))}).join('')}</table>${tbl(CPT)}`;
+  let h=`<div class="hdband"><span class="brand">EDL 06 IMMO</span><span class="sub">Constat d’état des lieux</span></div><table>${row('Type d’état des lieux',typ)}</table>${tbl(GEN)}<h2>Compteurs</h2><table>${S.cp.map(c=>{const k='cp'+c.id,l=MT[c.t];return row(c.t+(S.v[k+'n']?' n° '+S.v[k+'n']:'')+(S.v[k+'e']?' ('+S.v[k+'e']+')':''),[S.v[k+'a']&&l[0]+' : '+S.v[k+'a'],S.v[k+'b']&&l[1]+' : '+S.v[k+'b']].filter(Boolean).join(' — '))}).join('')}</table>${tbl(CPT)}${(S.ph.cpt||[]).map(d=>`<img src="${d}">`).join('')}`;
   const line=(p,key,def)=>{const [n,o,cn,chk,dp,cond]=def,k=p+'.'+key,s=S.v[k+'s'],b=S.v[k+'b'];
     const ty=[S.v[k+'o'],S.v[k+'o2'],...(cn||[]).map((c,j)=>S.v[k+'c'+j]?c+' '+S.v[k+'c'+j]:''),...(chk||[]).map((c,j)=>S.v[k+'x'+j]?c:''),cond&&S.v[k+'cc']?cond.label+' '+S.v[k+'cc']:''].filter(Boolean).join(', ');
     if(!(s||b||ty||S.v[k+'t']||S.v[k+'1']||S.v[k+'2']))return '';
@@ -1420,114 +1420,6 @@ $('#qb').addEventListener('click',e=>{const b=e.target.closest('button'),t=docum
   const v=t.value,p=t.selectionStart??v.length,s=(v&&!/[\s\/(]$/.test(v.slice(0,p))?' ':'')+b.textContent;
   t.setRangeText(s,p,t.selectionEnd??p,'end');S.v[t.dataset.k]=t.value;grow(t);save()});
 document.addEventListener('focusin',e=>{$('#qb').style.display=e.target.classList&&e.target.classList.contains('ob')?'flex':'none'});
-
-// ===== Pré-remplissage automatique depuis les paramètres d'URL (Jotform) =====
-(function prefillFromURL() {
-  try {
-    const params = new URLSearchParams(window.location.search);
-    if (params.size === 0) return;
-
-    const get = (key) => {
-      const val = params.get(key);
-      return val ? decodeURIComponent(val.replace(/\+/g, ' ')).trim() : '';
-    };
-
-    let filled = 0;
-
-    // N° RDV
-    if (get('rdv')) { S.v.rdv = get('rdv'); filled++; }
-
-    // Date + Heure (Jotform envoie souvent "Oct 08, 2026 09:30-11:00")
-    const rawDate = get('date');
-    if (rawDate) {
-      // Essaie de parser le format anglais "Oct 08, 2026 09:30-11:00"
-      const m = rawDate.match(/([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})\s+(\d{1,2}:\d{2})/);
-      if (m) {
-        const months = {jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
-        const month = months[m[1].toLowerCase().slice(0,3)];
-        if (month) {
-          S.v.date = m[3] + '-' + String(month).padStart(2,'0') + '-' + m[2].padStart(2,'0');
-          S.v.heure = m[4];
-          filled += 2;
-        } else {
-          S.v.date = rawDate;
-          filled++;
-        }
-      } else {
-        // Format déjà correct (YYYY-MM-DD)
-        S.v.date = rawDate;
-        filled++;
-      }
-    }
-
-    if (get('heure') && get('heure') !== 'Array') {
-      S.v.heure = get('heure');
-      filled++;
-    }
-
-    // Client / Propriétaire
-    if (get('client')) { S.v.client = get('client'); filled++; }
-    if (get('cliente')) { S.v.cliente = get('cliente'); filled++; }
-    if (get('clientte')) { S.v.clientte = get('clientte'); filled++; }
-
-    // Adresse
-    if (get('adr')) { S.v.adr = get('adr'); filled++; }
-
-    // Ville + Code postal
-    const villeRaw = get('ville');
-    if (villeRaw) {
-      if (villeRaw.includes('\t')) {
-        const parts = villeRaw.split('\t');
-        S.v.cp = parts[0].trim();
-        S.v.ville = parts[1] ? parts[1].trim() : '';
-      } else if (/^\d{5}/.test(villeRaw)) {
-        S.v.cp = villeRaw.substring(0, 5);
-        S.v.ville = villeRaw.substring(5).trim();
-      } else {
-        S.v.ville = villeRaw;
-      }
-      filled++;
-    }
-    if (get('cp')) { S.v.cp = get('cp'); filled++; }
-
-    // Meublé / Vide
-    if (get('meub')) { S.v.meub = get('meub'); filled++; }
-
-    // Étage
-    if (get('etage')) { S.v.etage = get('etage'); filled++; }
-    if (get('typ')) { S.v.typ = get('typ'); filled++; }
-
-    // Locataire entrant
-    if (get('ent')) { S.v.ent = get('ent'); filled++; }
-    if (get('entem')) { S.v.entem = get('entem'); filled++; }
-    if (get('entte')) { S.v.entte = get('entte'); filled++; }
-
-    // Locataire sortant
-    if (get('sor')) { S.v.sor = get('sor'); filled++; }
-    if (get('sorem')) { S.v.sorem = get('sorem'); filled++; }
-    if (get('sorte')) { S.v.sorte = get('sorte'); filled++; }
-
-    // Type d'EDL
-    if (get('sensE') === '1' || get('type') === 'entree') {
-      S.v.sensE = true;
-      delete S.v.sensS;
-      filled++;
-    }
-    if (get('sensS') === '1' || get('type') === 'sortie') {
-      S.v.sensS = true;
-      delete S.v.sensE;
-      filled++;
-    }
-
-    if (filled > 0) {
-      S.tab = 'gen';
-      try { save(); } catch(e) {}
-      try { msg(filled + ' champ(s) pré-rempli(s) depuis Jotform'); } catch(e) {}
-    }
-  } catch(e) {
-    console.error('Erreur prefillFromURL', e);
-  }
-})();
 render();
 </script>
 </body>
