@@ -1420,6 +1420,80 @@ $('#qb').addEventListener('click',e=>{const b=e.target.closest('button'),t=docum
   const v=t.value,p=t.selectionStart??v.length,s=(v&&!/[\s\/(]$/.test(v.slice(0,p))?' ':'')+b.textContent;
   t.setRangeText(s,p,t.selectionEnd??p,'end');S.v[t.dataset.k]=t.value;grow(t);save()});
 document.addEventListener('focusin',e=>{$('#qb').style.display=e.target.classList&&e.target.classList.contains('ob')?'flex':'none'});
+
+// ===== Pré-remplissage automatique depuis les paramètres d'URL (Jotform) =====
+(function prefillFromURL() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.size === 0) return;
+
+    const get = (key) => {
+      const val = params.get(key);
+      return val ? decodeURIComponent(val.replace(/\+/g, ' ')).trim() : '';
+    };
+
+    let filled = 0;
+
+    if (get('rdv'))       { S.v.rdv = get('rdv'); filled++; }
+    if (get('date'))      { S.v.date = get('date'); filled++; }
+    if (get('heure'))     { S.v.heure = get('heure'); filled++; }
+    if (get('client'))    { S.v.client = get('client'); filled++; }
+    if (get('cliente'))   { S.v.cliente = get('cliente'); filled++; }
+    if (get('clientte'))  { S.v.clientte = get('clientte'); filled++; }
+    if (get('adr'))       { S.v.adr = get('adr'); filled++; }
+    if (get('meub'))      { S.v.meub = get('meub'); filled++; }
+    if (get('typ'))       { S.v.typ = get('typ'); filled++; }
+    if (get('etage'))     { S.v.etage = get('etage'); filled++; }
+
+    if (get('ent'))       { S.v.ent = get('ent'); filled++; }
+    if (get('entem'))     { S.v.entem = get('entem'); filled++; }
+    if (get('entte'))     { S.v.entte = get('entte'); filled++; }
+
+    if (get('sor'))       { S.v.sor = get('sor'); filled++; }
+    if (get('sorem'))     { S.v.sorem = get('sorem'); filled++; }
+    if (get('sorte'))     { S.v.sorte = get('sorte'); filled++; }
+
+    const villeRaw = get('ville');
+    if (villeRaw) {
+      if (villeRaw.includes('\t')) {
+        const parts = villeRaw.split('\t');
+        S.v.cp = parts[0].trim();
+        S.v.ville = parts[1] ? parts[1].trim() : '';
+      } else if (/^\d{5}/.test(villeRaw)) {
+        S.v.cp = villeRaw.substring(0, 5);
+        S.v.ville = villeRaw.substring(5).trim();
+      } else {
+        S.v.ville = villeRaw;
+      }
+      filled++;
+    }
+
+    if (get('cp')) {
+      S.v.cp = get('cp');
+      filled++;
+    }
+
+    if (get('sensE') === '1' || get('type') === 'entree') {
+      S.v.sensE = true;
+      delete S.v.sensS;
+      filled++;
+    }
+    if (get('sensS') === '1' || get('type') === 'sortie') {
+      S.v.sensS = true;
+      delete S.v.sensE;
+      filled++;
+    }
+
+    if (filled > 0) {
+      S.tab = 'gen';
+      try { save(); } catch(e) {}
+      try { msg(filled + ' champ(s) pré-rempli(s) depuis Jotform'); } catch(e) {}
+    }
+  } catch(e) {
+    console.error('Erreur prefillFromURL', e);
+  }
+})();
+
 render();
 </script>
 </body>
