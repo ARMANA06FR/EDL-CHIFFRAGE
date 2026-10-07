@@ -104,6 +104,7 @@ canvas.sg.locked{border-color:var(--be);border-width:2px}
 <body>
 <header>
   <div class="top"><h1>État des lieux</h1><span id="st"></span>
+    <button class="btn sm" id="themeBtn" title="Mode sombre">🌙</button>
     <button class="btn d sm" id="neu">Nouveau</button>
     <label class="btn sm" title="Reprendre un EDL (JSON)">Importer<input type="file" accept="application/json" hidden id="imp"></label>
     <button class="btn sm" id="expj">JSON</button>
@@ -799,6 +800,20 @@ let tm;
 function msg(t){$('#st').textContent=t;clearTimeout(tm);tm=setTimeout(()=>$('#st').textContent='',2500)}
 function save(){try{localStorage.setItem('edl1',JSON.stringify({v:S.v,rooms:S.rooms,tab:S.tab,cp:S.cp,x:S.x,iv:S.iv,an:S.an,kl:S.kl,san:S.san,baseline:S.baseline,chif:S.chif}))}catch(e){msg('Sauvegarde impossible')}}
 function savePh(){try{localStorage.setItem('edl1p',JSON.stringify(S.ph))}catch(e){msg('Mémoire pleine : exporte avant de continuer')}}
+function getTheme(){try{return localStorage.getItem('edl1theme')||''}catch(e){return ''}}
+function isDarkNow(){const t=getTheme();if(t==='dark')return true;if(t==='light')return false;return matchMedia('(prefers-color-scheme:dark)').matches}
+function applyTheme(){
+  const t=getTheme();
+  if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);
+  else document.documentElement.removeAttribute('data-theme');
+  const btn=$('#themeBtn');
+  if(btn){const dark=isDarkNow();btn.textContent=dark?'☀️':'🌙';btn.title=dark?'Mode clair':'Mode sombre'}
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.content=isDarkNow()?'#11191d':'#0e6d8c';
+}
+function toggleTheme(){try{localStorage.setItem('edl1theme',isDarkNow()?'light':'dark')}catch(e){}applyTheme()}
+applyTheme();
+$('#themeBtn').onclick=toggleTheme;
 const isSortant=()=>!!S.v.sensS;
 
 const chip=(k,v,l,t,col)=>`<button class="c${S.v[k]===v?' on':''}" data-k="${esc(k)}" data-v="${esc(v)}"${col?` style="--c:var(${col});--t:#fff"`:''}${t?` title="${esc(t)}"`:''}>${esc(l)}</button>`;
@@ -808,7 +823,6 @@ const sel=(k,o)=>`<select data-k="${esc(k)}"><option value="">—</option>${o.ma
 function fld([k,l,t]){
   if(k==='sousType'){
     const opts=SOUSTYPES[S.v.meub]||[];
-    if(!opts.length)return '';
     return `<label class="f">${esc(l||'Catégorie')}<select data-k="sousType"><option value="">—</option>${opts.map(o=>`<option${S.v.sousType===o?' selected':''}>${esc(o)}</option>`).join('')}</select></label>`;
   }
   if(Array.isArray(t))return `<div class="seg">${l?`<span>${esc(l)}</span>`:''}${t.map(o=>chip(k,o,o)).join('')}</div>`;
@@ -1071,7 +1085,7 @@ function renderCore(){
       const finFld=k==='sgX'?`<label class="f">Heure de fin<input data-k="heurefin" type="time" value="${esc(S.v.heurefin||'')}"></label>`:'';
       return `<h3>${l}</h3><label class="f">Nom<input data-k="${k}n" value="${esc(nm(k,d))}"></label>${adrFld}<canvas class="sg${locked?' locked':''}" data-k="${k}"${locked?' style="pointer-events:none"':''}></canvas><div class="act">${locked?`<span class="lg">✓ Signature validée</span><button class="btn sm" data-act="unlock" data-k="${k}">Modifier</button>`:`<button class="btn sm" data-act="clr" data-k="${k}">Effacer</button><button class="btn p sm" data-act="lock" data-k="${k}">Valider la signature</button>`}</div>${finFld}`;
     };
-    h=`<h2>Signatures</h2>${eO?'':blk(SIG[0])}<div class="g">${fld(['dent','Date d’entrée dans le logement','date'])}</div><label class="f">Commentaire du locataire<textarea rows="4" data-k="com">${esc(S.v.com||'')}</textarea></label>${sO?'':blk(SIG[1])}${blk(SIG[2])}${blk(SIG[3])}`;
+    h=`<h2>Signatures</h2>${eO?'':blk(SIG[0])}${S.v.sensS?`<div class="g">${fld(['dent','Date d’entrée dans le logement','date'])}</div><label class="f">Commentaire du locataire<textarea rows="4" data-k="com">${esc(S.v.com||'')}</textarea></label>`:''}${sO?'':blk(SIG[1])}${blk(SIG[2])}${blk(SIG[3])}`;
   }
   else{
     const r=S.rooms.find(x=>x.id===T);if(!r){S.tab='gen';return render()}
