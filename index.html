@@ -74,7 +74,7 @@ input:focus-visible,select:focus-visible,button:focus-visible,textarea:focus-vis
 .ph img{width:96px;height:96px;object-fit:cover;border-radius:8px}
 .ph button{position:absolute;top:2px;right:2px;border:0;background:#000a;color:#fff;border-radius:50%;width:24px;height:24px}
 .kg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
-canvas.sg{width:100%;height:150px;background:#fff;border:1px solid var(--line);border-radius:8px;touch-action:none}
+canvas.sg{width:100%;height:225px;background:#fff;border:1px solid var(--line);border-radius:8px;touch-action:none}
 canvas.sg.locked{border-color:var(--be);border-width:2px}
 .act{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;align-items:center}
 .cn{grid-template-columns:repeat(auto-fit,minmax(72px,1fr));margin:6px 0}
@@ -147,11 +147,17 @@ const TPL={
 };
 const GEN=[
 ['Rendez-vous',[['statut','Statut',['Professionnel de l’immobilier','Bailleur social','Propriétaire bailleur','Locataire']],['client','Client'],['cliente','E-mail client'],['clientte','Téléphone client'],['rdv','N° RDV'],['date','Date','date'],['heure','Heure','time'],['cadr','Adresse du client'],['ccp','Code postal'],['cville','Ville']]],
-['Logement',[['prop','Nom du propriétaire'],['typ','Type (T2, T3…)'],['etage','Étage'],['digi','Digicode'],['hp','H/plafond'],['adr','Adresse du logement'],['cp','Code postal'],['ville','Ville'],['meub','Logement',['Vide','Meublé']],['inv','Inventaire',['À établir','À contrôler','À ignorer']]]],
+['Type de bien',[['meub','',['Résidentiel','Professionnel','Annexe','Agricole','Terrain']],['sousType','Catégorie'],['prop','Nom du propriétaire'],['typ','Type (T2, T3…)'],['etage','Étage'],['digi','Digicode'],['hp','H/plafond'],['adr','Adresse du logement'],['cp','Code postal'],['ville','Ville'],['inv','Inventaire',['À établir','À contrôler','À ignorer']]]],
 ['Locataires',[['ent','Locataire entrant'],['entem','E-mail entrant'],['entte','Téléphone entrant'],['sor','Locataire sortant'],['sorem','E-mail sortant'],['sorte','Téléphone sortant'],['nadr','Nouvelle adresse du sortant'],['ncp','Code postal'],['nville','Ville']]]];
+const SOUSTYPES={
+  'Résidentiel':['Appartement','Maison','Villa','Chambre meublée','Logement étudiant'],
+  'Professionnel':['Boutique','Local commercial','Bureaux','Local d\'activité','Entrepôt','Usine'],
+  'Annexe':['Garage','Box de stationnement','Place de parking','Cave / Cellier','Box de stockage'],
+  'Agricole':['Corps de ferme','Terres agricoles','Bâtiments agricoles','Domaines viticoles'],
+  'Terrain':['Terrain à bâtir','Terrain de loisir']
+};
 const CPT=[
-['Équipements',[['ecs','Eau chaude',['Cumulus','Chauffe-eau gaz','Collectif']],['ecsm','Marque / modèle'],['chf','Chauffage',['Indiv. élec.','Indiv. gaz','Collectif']],['daaf','DAAF',['Oui','Non']],['daafl','Emplacement DAAF'],['cert','Certificat d’entretien',['Oui','Non']],['coupe','Alimentation coupée (sous réserve)',['Aucune','Eau','Électricité','Eau + élec.']]]],
-['Villa / maison',[['chd','Chaudière',['Fuel','Gaz']],['cuve','Niveau cuve (litres)'],['chc','Certificat d’entretien chaudière',['Oui','Non']],['chdate','Daté du','date']]]];
+['Équipements',[['ecs','Eau chaude',['Cumulus','Chauffe-eau gaz','Collectif']],['ecsm','Marque / modèle'],['chf','Chauffage',['Indiv. élec.','Indiv. gaz','Collectif']],['daaf','DAAF',['Oui','Non']],['daafl','Emplacement DAAF'],['cert','Certificat d’entretien',['Oui','Non']],['chd','Chaudière',['Fuel','Gaz']],['cuve','Niveau cuve (litres)'],['chc','Certificat d’entretien chaudière',['Oui','Non']],['chdate','Daté du','date']]]];
 const MT={'Eau':['Froide (m³)','Chaude (m³)'],'Électricité':['HP (kWh)','HC (kWh)'],'Gaz':['Index (m³)',''],'Autre':['Index 1','Index 2']};
 const SS=ST.map(x=>x[0]),SN=['Baignoire','Douche','Lavabo','Bidet'],SC=['Mél./Mitig.','Bonde','Siphon','Jt silicone','Flexible','Douchette','Inverseur'];
 const ANN0=['Boîte à lettres','Cave','Garage','Grenier'];
@@ -800,7 +806,12 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worke
 
 const sel=(k,o)=>`<select data-k="${esc(k)}"><option value="">—</option>${o.map(x=>`<option${S.v[k]===x?' selected':''}>${esc(x)}</option>`).join('')}</select>`;
 function fld([k,l,t]){
-  if(Array.isArray(t))return `<div class="seg"><span>${esc(l)}</span>${t.map(o=>chip(k,o,o)).join('')}</div>`;
+  if(k==='sousType'){
+    const opts=SOUSTYPES[S.v.meub]||[];
+    if(!opts.length)return '';
+    return `<label class="f">${esc(l||'Catégorie')}<select data-k="sousType"><option value="">—</option>${opts.map(o=>`<option${S.v.sousType===o?' selected':''}>${esc(o)}</option>`).join('')}</select></label>`;
+  }
+  if(Array.isArray(t))return `<div class="seg">${l?`<span>${esc(l)}</span>`:''}${t.map(o=>chip(k,o,o)).join('')}</div>`;
   return `<label class="f">${esc(l)}<input data-k="${k}" type="${t||'text'}" value="${esc(S.v[k]||'')}"></label>`;
 }
 const groups=G=>G.map(([t,f])=>`<h3>${esc(t)}</h3><div class="g">${f.map(fld).join('')}</div>`).join('');
@@ -865,7 +876,8 @@ const san=id=>{
 };
 const wcCard=id=>{const k='wcg'+id+'.',filled=WCF.some((c,j)=>S.v[k+j]);return `<div class="it${filled?' filled':''}"><b>WC</b><div class="g">${WCF.map((c,j)=>`<label class="f">${c}${sel(k+j,SS)}</label>`).join('')}</div>${ob(k)}</div>`};
 const meters=()=>`<h3>Compteurs</h3>`+S.cp.map(c=>{const k='cp'+c.id,l=MT[c.t],f=(s,t)=>`<label class="f">${t}<input data-k="${k+s}" value="${esc(S.v[k+s]||'')}"></label>`;
-  return `<div class="it"><div class="hd"><b>${c.t}</b><button class="mini" data-act="dupcp" data-r="${c.id}" title="Dupliquer juste en dessous">+</button>${c.orig?'':`<button class="btn d sm" data-act="delcp" data-r="${c.id}">Retirer</button>`}</div><div class="g">${f('n','N° compteur')}${f('e','Emplacement')}${f('a',l[0])}${l[1]?f('b',l[1]):''}</div></div>`}).join('')+`<div class="act"><select id="nc" style="width:auto">${Object.keys(MT).map(t=>`<option>${t}</option>`).join('')}</select><button class="btn sm" data-act="addcp">Ajouter un compteur</button></div>`;
+  const svc=`<div class="seg"><span>État</span><button class="c${S.v[k+'svc']==='En service'?' on':''}" data-k="${k}svc" data-v="En service">En service</button><button class="c${S.v[k+'svc']==='Coupé(e)'?' on':''}" data-k="${k}svc" data-v="Coupé(e)">Coupé(e)</button></div>`;
+  return `<div class="it"><div class="hd"><b>${c.t}</b><button class="mini" data-act="dupcp" data-r="${c.id}" title="Dupliquer juste en dessous">+</button>${c.orig?'':`<button class="btn d sm" data-act="delcp" data-r="${c.id}">Retirer</button>`}</div><div class="g">${f('n','N° compteur')}${f('e','Emplacement')}${f('a',l[0])}${l[1]?f('b',l[1]):''}</div>${svc}<label class="f">Observations<textarea class="ob" rows="1" data-k="${k}obs" placeholder="Observations">${esc(S.v[k+'obs']||'')}</textarea></label></div>`}).join('')+`<div class="act"><select id="nc" style="width:auto">${Object.keys(MT).map(t=>`<option>${t}</option>`).join('')}</select><button class="btn sm" data-act="addcp">Ajouter un compteur</button></div>`;
 const ivPh=id=>`<div class="ph" id="phs-${id}">${phView(id)}</div><div class="act"><label class="btn sm">Photo<input type="file" accept="image/*" capture="environment" hidden data-ph="${id}"></label><label class="btn sm">Galerie<input type="file" accept="image/*" multiple hidden data-ph="${id}"></label></div>`;
 const ivRow=r=>{const k='iv'+r.id,f=(s,l)=>`<button class="c${S.v[k+s]?' on':''}" data-k="${k+s}" data-t="1">${l}</button>`,
   n=(s,l,x='')=>`<label class="f">${l}<input ${x} data-k="${k+s}" value="${esc(S.v[k+s]||'')}"></label>`;
@@ -877,7 +889,8 @@ function dynList(arr,tag,extra,ph){
 }
 function tabFilled(id){
   if(id==='gen')return !!(S.v.sensE||S.v.sensS||GENKEYS.some(k=>S.v[k]));
-  if(id==='cpt')return S.cp.some(c=>{const k='cp'+c.id;return S.v[k+'n']||S.v[k+'e']||S.v[k+'a']||S.v[k+'b']})||CPTKEYS.some(k=>S.v[k]);
+  if(id==='cpt')return S.cp.some(c=>{const k='cp'+c.id;return S.v[k+'n']||S.v[k+'e']||S.v[k+'a']||S.v[k+'b']||S.v[k+'svc']||S.v[k+'obs']});
+  if(id==='equi')return CPTKEYS.some(k=>S.v[k]);
   if(id==='inv')return S.iv.some(r=>{const k='iv'+r.id;return S.v[k+'p']||S.v[k+'d']||S.v[k+'s']||S.v[k+'a']||S.v[k+'b']});
   if(id==='ann')return S.an.some(o=>{const k='an'+o.id+'.';return S.v[k+'p']||S.v[k+'s']||S.v[k+'m']||S.v[k+'b']||S.v[k+'num']});
   if(id==='cles')return total()>0;
@@ -983,7 +996,7 @@ function compareList(){
   return out;
 }
 function tabs(){
-  const t=[['gen','Général'],['cpt','Compteurs'],...S.rooms.map(r=>[r.id,r.n||'Pièce']),['inv','Inventaire'],['ann','Annexes'],['cles','Clés']];
+  const t=[['gen','Général'],['cpt','Compteurs'],['equi','Équipements'],...S.rooms.map(r=>[r.id,r.n||'Pièce']),['inv','Inventaire'],['ann','Annexes'],['cles','Clés']];
   if(isSortant())t.push(['net','Nettoyage']);
   if(S.baseline){t.push(['cmp','Comparatif']);t.push(['chif','Chiffrage']);}
   t.push(['sig','Signatures']);
@@ -1006,10 +1019,11 @@ function renderCore(){
     if(!eO)h+=`<h3 class="strong">Locataire sortant</h3><div class="g">${[['sor','Nom'],['sorem','E-mail'],['sorte','Téléphone'],['nadr','Nouvelle adresse'],['ncp','Code postal'],['nville','Ville']].map(fld).join('')}</div>`;
     h+=contactsBlock();
   }
-  else if(T==='cpt')h=`<h2>Relevés et équipements</h2>${meters()}${groups(CPT)}${photoBlock('cpt')}`;
-  else if(T==='ann')h=`<h2>Annexes</h2>${dynList(S.an,'an',(k,o)=>`<div class="g">${['Cave','Garage','Grenier'].includes(o.n)?`<label class="f">N°<input data-k="${k}num" value="${esc(S.v[k+'num']||'')}"></label>`:''}<label class="f">Porte${sel(k+'p',SS)}</label><label class="f">Serrure${sel(k+'s',SS)}</label><label class="f">Vide ou m³ à vider<input data-k="${k}m" value="${esc(S.v[k+'m']||'')}"></label></div>${ob(k)}`)}${photoBlock('ann')}`;
-  else if(T==='cles')h=`<h2>Clés remises</h2>${dynList(S.kl,'kl',(k,o)=>`<div class="g"><label class="f">Quantité<input type="number" min="0" inputmode="numeric" data-k="${k}q" value="${esc(S.v[k+'q']||'')}"></label>${['Émetteur','Clé magnétique'].includes(o.n)?`<label class="f">État${sel(k+'s',SS)}</label>`:''}</div>`)}<p><b>Total clés : <span id="tot">${total()}</span></b></p><h3>Observations</h3>${ob('clesg')}${photoBlock('cles')}`;
-  else if(T==='net')h=`<h2>Nettoyage général</h2><div class="row">${['Bon','Moyen','Médiocre'].map(o=>chip('net',o,o)).join('')}</div>${ob('netg')}`;
+  else if(T==='cpt')h=`<h2>Compteurs</h2>${meters()}${photoBlock('cpt')}<div class="act"><button class="btn ${S.v['cpt.done']?'p':''} sm" data-act="donebtn" data-r="cpt">${S.v['cpt.done']?'✓ Section terminée':'Marquer comme terminée'}</button></div>`;
+  else if(T==='equi')h=`<h2>Équipements</h2>${groups(CPT)}<div class="act"><button class="btn ${S.v['equi.done']?'p':''} sm" data-act="donebtn" data-r="equi">${S.v['equi.done']?'✓ Section terminée':'Marquer comme terminée'}</button></div>`;
+  else if(T==='ann')h=`<h2>Annexes</h2>${dynList(S.an,'an',(k,o)=>`<div class="g">${['Cave','Garage','Grenier'].includes(o.n)?`<label class="f">N°<input data-k="${k}num" value="${esc(S.v[k+'num']||'')}"></label>`:''}<label class="f">Porte${sel(k+'p',SS)}</label><label class="f">Serrure${sel(k+'s',SS)}</label><label class="f">Vide ou m³ à vider<input data-k="${k}m" value="${esc(S.v[k+'m']||'')}"></label></div>${ob(k)}`)}${photoBlock('ann')}<div class="act"><button class="btn ${S.v['ann.done']?'p':''} sm" data-act="donebtn" data-r="ann">${S.v['ann.done']?'✓ Section terminée':'Marquer comme terminée'}</button></div>`;
+  else if(T==='cles')h=`<h2>Clés remises</h2>${dynList(S.kl,'kl',(k,o)=>`<div class="g"><label class="f">Quantité<input type="number" min="0" inputmode="numeric" data-k="${k}q" value="${esc(S.v[k+'q']||'')}"></label>${['Émetteur','Clé magnétique'].includes(o.n)?`<label class="f">État${sel(k+'s',SS)}</label>`:''}</div>`)}<p><b>Total clés : <span id="tot">${total()}</span></b></p><h3>Observations</h3>${ob('clesg')}${photoBlock('cles')}<div class="act"><button class="btn ${S.v['cles.done']?'p':''} sm" data-act="donebtn" data-r="cles">${S.v['cles.done']?'✓ Section terminée':'Marquer comme terminée'}</button></div>`;
+  else if(T==='net')h=`<h2>Nettoyage général</h2><div class="row">${['Bon','Moyen','Médiocre'].map(o=>chip('net',o,o)).join('')}</div>${ob('netg')}<div class="act"><button class="btn ${S.v['net.done']?'p':''} sm" data-act="donebtn" data-r="net">${S.v['net.done']?'✓ Section terminée':'Marquer comme terminée'}</button></div>`;
   else if(T==='chif'){h=renderChif()}
   else if(T==='cat'){h=renderCat()}
   else if(T==='cmp'){
@@ -1049,12 +1063,13 @@ function renderCore(){
     <div class="act"><button class="btn p sm" data-act="expDecompte">Exporter le décompte</button><button class="btn p sm" data-act="goChif">Ouvrir le chiffrage →</button></div>
     <p class="lg">Coche « Imputable au locataire » sur chaque poste à reprendre dans le chiffrage. Les écarts TrCh (trous de chevilles) apparaissent automatiquement.</p>`;
   }
-  else if(T==='inv')h=`<h2>Inventaire du mobilier</h2><div class="g">${fld(['ive','Entrée',['Établissement','Contrôle']])}${fld(['ivs','Sortie',['Établissement','Contrôle']])}</div><datalist id="dp">${S.rooms.map(r=>`<option value="${esc(r.n)}">`).join('')}</datalist><datalist id="dd">${DD.map(x=>`<option value="${esc(x)}">`).join('')}</datalist>${S.iv.map(ivRow).join('')}<div class="act"><button class="btn p sm" data-act="addiv">Ajouter un objet</button></div>${photoBlock('inv','Photos mobilier')}`;
+  else if(T==='inv')h=`<h2>Inventaire du mobilier</h2><div class="g">${fld(['ive','Entrée',['Établissement','Contrôle']])}${fld(['ivs','Sortie',['Établissement','Contrôle']])}</div><datalist id="dp">${S.rooms.map(r=>`<option value="${esc(r.n)}">`).join('')}</datalist><datalist id="dd">${DD.map(x=>`<option value="${esc(x)}">`).join('')}</datalist>${S.iv.map(ivRow).join('')}<div class="act"><button class="btn p sm" data-act="addiv">Ajouter un objet</button></div>${photoBlock('inv','Photos mobilier')}<div class="act"><button class="btn ${S.v['inv.done']?'p':''} sm" data-act="donebtn" data-r="inv">${S.v['inv.done']?'✓ Section terminée':'Marquer comme terminée'}</button></div>`;
   else if(T==='sig'){
     const sO=S.v.sensS&&!S.v.sensE,eO=S.v.sensE&&!S.v.sensS;
     const blk=([k,l,d])=>{const locked=!!S.v[k+'lock'];
       const adrFld=k==='sgX'?`<label class="f">Adresse postale<input data-k="${k}adr" value="${esc(S.v[k+'adr']||'485, chemin Thomas Garbies 06610 La Gaude')}"></label>`:'';
-      return `<h3>${l}</h3><label class="f">Nom<input data-k="${k}n" value="${esc(nm(k,d))}"></label>${adrFld}<canvas class="sg${locked?' locked':''}" data-k="${k}"${locked?' style="pointer-events:none"':''}></canvas><div class="act">${locked?`<span class="lg">✓ Signature validée</span><button class="btn sm" data-act="unlock" data-k="${k}">Modifier</button>`:`<button class="btn sm" data-act="clr" data-k="${k}">Effacer</button><button class="btn p sm" data-act="lock" data-k="${k}">Valider la signature</button>`}</div>`;
+      const finFld=k==='sgX'?`<label class="f">Heure de fin<input data-k="heurefin" type="time" value="${esc(S.v.heurefin||'')}"></label>`:'';
+      return `<h3>${l}</h3><label class="f">Nom<input data-k="${k}n" value="${esc(nm(k,d))}"></label>${adrFld}<canvas class="sg${locked?' locked':''}" data-k="${k}"${locked?' style="pointer-events:none"':''}></canvas><div class="act">${locked?`<span class="lg">✓ Signature validée</span><button class="btn sm" data-act="unlock" data-k="${k}">Modifier</button>`:`<button class="btn sm" data-act="clr" data-k="${k}">Effacer</button><button class="btn p sm" data-act="lock" data-k="${k}">Valider la signature</button>`}</div>${finFld}`;
     };
     h=`<h2>Signatures</h2>${eO?'':blk(SIG[0])}<div class="g">${fld(['dent','Date d’entrée dans le logement','date'])}</div><label class="f">Commentaire du locataire<textarea rows="4" data-k="com">${esc(S.v.com||'')}</textarea></label>${sO?'':blk(SIG[1])}${blk(SIG[2])}${blk(SIG[3])}`;
   }
@@ -1080,7 +1095,7 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('.c');
   if(b && !b.dataset.act){const k=b.dataset.k;
     if(b.dataset.t){S.v[k]=!S.v[k];b.classList.toggle('on',!!S.v[k]);if(k==='sensE'||k==='sensS')render()}
-    else{const v=b.dataset.v;S.v[k]=S.v[k]===v?'':v;b.parentElement.querySelectorAll('.c[data-v]').forEach(x=>x.classList.toggle('on',S.v[k]===x.dataset.v))}
+    else{const v=b.dataset.v;S.v[k]=S.v[k]===v?'':v;b.parentElement.querySelectorAll('.c[data-v]').forEach(x=>x.classList.toggle('on',S.v[k]===x.dataset.v));if(k==='meub'){const opts=SOUSTYPES[S.v.meub]||[];if(!opts.includes(S.v.sousType))delete S.v.sousType;render();save();return}}
     save();return}
   const a=e.target.closest('[data-act]');if(!a)return;const d=a.dataset;
   if(d.act==='add'){const t=$('#nt').value,n=S.rooms.filter(r=>r.t===t).length+1;const r={id:'r'+Date.now(),n:TPL[t].l.split(' (')[0]+(n>1?' '+n:''),t};S.rooms.push(r);S.tab=r.id;render();save()}
@@ -1107,7 +1122,7 @@ document.addEventListener('click',e=>{
   if(d.act==='dupkl'){const i=S.kl.findIndex(o=>o.id===d.r);S.kl.splice(i+1,0,{id:'k'+Date.now(),n:S.kl[i].n});render();save()}
   if(d.act==='rmph'){S.ph[d.r].splice(+d.i,1);const el=document.getElementById('phs-'+d.r)||$('#phs');if(el)el.innerHTML=phView(d.r);savePh()}
   if(d.act==='clr'){delete S.v[d.k];save();sigInit()}
-  if(d.act==='lock'){if(!S.v[d.k]){msg('Signe d’abord avant de valider');return}S.v[d.k+'lock']=true;save();render()}
+  if(d.act==='lock'){if(!S.v[d.k]){msg('Signe d’abord avant de valider');return}S.v[d.k+'lock']=true;if(d.k==='sgX'){const now=new Date();S.v.heurefin=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')}save();render()}
   if(d.act==='unlock'){delete S.v[d.k+'lock'];save();render()}
   if(d.act==='cmpToggle'){cmpShowAll=!cmpShowAll;render()}
   if(d.act==='cmpClear'){if(a.dataset.ok!=='1'){a.dataset.ok='1';a.textContent='Confirmer l’effacement';return}S.baseline=null;S.tab='gen';render();save()}
@@ -1275,13 +1290,20 @@ function sigInit(){
 }
 const STCLR={NV:'#eef1f2',NF:'#e6f2fa',BE:'#e8f5ec',EU:'#fdf3e2',ME:'#fbe9e0',HS:'#fbe4e6'};
 const STL={NV:'Non vérifié',NF:'Neuf',BE:'Bon état',EU:'État d’usage',ME:'Mauvais état',HS:'Hors service'};
+function fmtDate(d){
+  if(!d)return '';
+  if(/^\d{2}\/\d{2}\/\d{4}$/.test(d))return d;
+  const m=String(d).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m)return m[3]+'/'+m[2]+'/'+m[1];
+  return d;
+}
 function recap(){
   const cnt={r1:0,r2:0};const tick=s=>{if(s)cnt[s]=(cnt[s]||0)+1};
   const row=(a,b)=>b?`<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`:'';
   const rowS=(a,b,s)=>b?`<tr style="background:${STCLR[s]||''}"><td>${esc(a)}</td><td>${esc(b)}</td></tr>`:'';
-  const tbl=G=>G.map(([t,f])=>`<h2>${esc(t)}</h2><table>${f.map(([k,l])=>row(l,S.v[k])).join('')}</table>`).join('');
+  const tbl=G=>G.map(([t,f])=>`<h2>${esc(t)}</h2><table>${f.map(([k,l,typ])=>row(l,typ==='date'?fmtDate(S.v[k]):(k==='sousType'||k==='meub'?S.v[k]:S.v[k]))).join('')}</table>`).join('');
   const typ=[S.v.sensE&&'Entrant',S.v.sensS&&'Sortant'].filter(Boolean).join(' + ')||'—';
-  let h=`<div class="hdband"><span class="brand">EDL 06 IMMO</span><span class="sub">Constat d’état des lieux</span></div><table>${row('Type d’état des lieux',typ)}</table>${tbl(GEN)}<h2>Compteurs</h2><table>${S.cp.map(c=>{const k='cp'+c.id,l=MT[c.t];return row(c.t+(S.v[k+'n']?' n° '+S.v[k+'n']:'')+(S.v[k+'e']?' ('+S.v[k+'e']+')':''),[S.v[k+'a']&&l[0]+' : '+S.v[k+'a'],S.v[k+'b']&&l[1]+' : '+S.v[k+'b']].filter(Boolean).join(' — '))}).join('')}</table>${tbl(CPT)}${(S.ph.cpt||[]).map(d=>`<img src="${d}">`).join('')}`;
+  let h=`<div class="hdband"><span class="brand">EDL 06 IMMO</span><span class="sub">Constat d’état des lieux</span></div><table>${row('Type d’état des lieux',typ)}</table>${tbl(GEN)}<h2>Compteurs</h2><table>${S.cp.map(c=>{const k='cp'+c.id,l=MT[c.t];const parts=[S.v[k+'svc'],S.v[k+'a']&&(l[0]+' : '+S.v[k+'a']),l[1]&&S.v[k+'b']&&(l[1]+' : '+S.v[k+'b']),S.v[k+'obs']&&('Obs. : '+S.v[k+'obs'])].filter(Boolean);return row(c.t+(S.v[k+'n']?' n° '+S.v[k+'n']:'')+(S.v[k+'e']?' ('+S.v[k+'e']+')':''),parts.join(' — '))}).join('')}</table>${(S.ph.cpt||[]).map(d=>`<img src="${d}">`).join('')}${tbl(CPT)}`;
   const line=(p,key,def)=>{const [n,o,cn,chk,dp,cond]=def,k=p+'.'+key,s=S.v[k+'s'],b=S.v[k+'b'];
     const ty=[S.v[k+'o'],S.v[k+'o2'],...(cn||[]).map((c,j)=>S.v[k+'c'+j]?c+' '+S.v[k+'c'+j]:''),...(chk||[]).map((c,j)=>S.v[k+'x'+j]?c:''),cond&&S.v[k+'cc']?cond.label+' '+S.v[k+'cc']:''].filter(Boolean).join(', ');
     if(!(s||b||ty||S.v[k+'t']||S.v[k+'1']||S.v[k+'2']))return '';
@@ -1292,14 +1314,14 @@ function recap(){
   const snr=id=>SN.map((n,i)=>sanRowGen('sn'+id+'.'+i+'.',n)).join('')+(S.san[id]||[]).map(eid=>sanRowGen('sn'+id+'.x'+eid+'.','Lavabo')).join('');
   const wcr=id=>{const k='wcg'+id+'.';WCF.forEach((c,j)=>tick(S.v[k+j]));return row('WC',[...WCF.map((c,j)=>S.v[k+j]&&c+' '+S.v[k+j]),S.v[k+'b']].filter(Boolean).join(' · '))};
   const lavR=id=>{const k='wcs'+id+'.',s=S.v[k+'s'];tick(s);return rowS('Lave-main',[S.v[k+'r'],s,...SC_LAV.map((c,j)=>S.v[k+j]&&c+' '+S.v[k+j]),S.v[k+'b']].filter(Boolean).join(' · '),s)};
-  S.rooms.forEach(r=>{const ex=S.x[r.id]||[];
+  S.rooms.filter(r=>S.v[r.id+'.done']).forEach(r=>{const ex=S.x[r.id]||[];
     h+=`<h2>${esc(r.n)}</h2><table>${th}${r.t==='wc'?wcr(r.id)+lavR(r.id):''}${TPL[r.t].i.map((x,i)=>line(r.id,'t'+i,x)+ex.filter(e=>e.base===x[0]).map(e=>line(r.id,e.id,[e.n,e.o,e.c,e.k])).join('')).join('')}${ex.filter(e=>!e.base).map(e=>line(r.id,e.id,[e.n,e.o,e.c,e.k])).join('')}</table>${r.t==='sdb'?`<table>${snr(r.id)}</table>`:''}${(S.ph[r.id]||[]).map(d=>`<img src="${d}">`).join('')}`});
-  if(S.iv.length)h+=`<h2>Inventaire du mobilier</h2><p>Entrée : ${esc(S.v.ive||'')} — Sortie : ${esc(S.v.ivs||'')}</p><table><tr><th>Pièce</th><th>Description</th><th>Nbre</th><th>État</th><th>Aspect</th><th>Observations</th><th>1</th><th>2</th></tr>${S.iv.map(r=>{const k='iv'+r.id;tick(S.v[k+'s']);if(S.v[k+'1'])cnt.r1++;if(S.v[k+'2'])cnt.r2++;return `<tr style="background:${STCLR[S.v[k+'s']]||''}">${['p','d','n','s','a','b'].map(x=>`<td>${esc(S.v[k+x]||'')}</td>`).join('')}<td>${S.v[k+'1']?'×':''}</td><td>${S.v[k+'2']?'×':''}</td></tr>`}).join('')}</table>${S.iv.map(r=>(S.ph['iv'+r.id]||[]).map(d=>`<img src="${d}">`).join('')).join('')}${(S.ph.inv||[]).map(d=>`<img src="${d}">`).join('')}`;
-  h+=`<h2>Annexes</h2><table>${S.an.map(o=>{const k='an'+o.id+'.';return row(o.n+(S.v[k+'num']?' n° '+S.v[k+'num']:''),[S.v[k+'p']&&'porte '+S.v[k+'p'],S.v[k+'s']&&'serrure '+S.v[k+'s'],S.v[k+'m']&&'à vider '+S.v[k+'m'],S.v[k+'b']].filter(Boolean).join(' · '))}).join('')}</table>${(S.ph.ann||[]).map(d=>`<img src="${d}">`).join('')}`;
-  h+=`<h2>Clés</h2><table>${S.kl.map(o=>{const k='kl'+o.id+'.';return row(o.n||'Clé',[S.v[k+'q']&&('qté '+S.v[k+'q']),S.v[k+'s']].filter(Boolean).join(' · '))}).join('')}${row('Total',String(total()))}${row('Observations',S.v.clesgb)}</table>${(S.ph.cles||[]).map(d=>`<img src="${d}">`).join('')}`;
-  if(isSortant())h+=`<h2>Nettoyage général</h2><table>${row('État',S.v.net)}${row('Observations',S.v.netgb)}</table>`;
-  h+=`<h2>Signatures</h2><table>${row('Date d’entrée',S.v.dent)}${row('Commentaire du locataire',S.v.com)}</table>`;
-  SIG.forEach(([k,l,d])=>{if(S.v[k]||nm(k,d))h+=`<p>${esc(l)} ${esc(nm(k,d))}${k==='sgX'?'<br>'+esc(S.v.sgXadr||'485, chemin Thomas Garbies 06610 La Gaude'):''}<br>${S.v[k]?`<img src="${S.v[k]}" style="max-width:260px;border:1px solid #999">`:''}</p>`});
+  if(S.iv.length&&S.v['inv.done'])h+=`<h2>Inventaire du mobilier</h2><p>Entrée : ${esc(S.v.ive||'')} — Sortie : ${esc(S.v.ivs||'')}</p><table><tr><th>Pièce</th><th>Description</th><th>Nbre</th><th>État</th><th>Aspect</th><th>Observations</th><th>1</th><th>2</th></tr>${S.iv.map(r=>{const k='iv'+r.id;tick(S.v[k+'s']);if(S.v[k+'1'])cnt.r1++;if(S.v[k+'2'])cnt.r2++;return `<tr style="background:${STCLR[S.v[k+'s']]||''}">${['p','d','n','s','a','b'].map(x=>`<td>${esc(S.v[k+x]||'')}</td>`).join('')}<td>${S.v[k+'1']?'×':''}</td><td>${S.v[k+'2']?'×':''}</td></tr>`}).join('')}</table>${S.iv.map(r=>(S.ph['iv'+r.id]||[]).map(d=>`<img src="${d}">`).join('')).join('')}${(S.ph.inv||[]).map(d=>`<img src="${d}">`).join('')}`;
+  if(S.v['ann.done'])h+=`<h2>Annexes</h2><table>${S.an.map(o=>{const k='an'+o.id+'.';return row(o.n+(S.v[k+'num']?' n° '+S.v[k+'num']:''),[S.v[k+'p']&&'porte '+S.v[k+'p'],S.v[k+'s']&&'serrure '+S.v[k+'s'],S.v[k+'m']&&'à vider '+S.v[k+'m'],S.v[k+'b']].filter(Boolean).join(' · '))}).join('')}</table>${(S.ph.ann||[]).map(d=>`<img src="${d}">`).join('')}`;
+  if(S.v['cles.done'])h+=`<h2>Clés</h2><table>${S.kl.map(o=>{const k='kl'+o.id+'.';return row(o.n||'Clé',[S.v[k+'q']&&('qté '+S.v[k+'q']),S.v[k+'s']].filter(Boolean).join(' · '))}).join('')}${row('Total',String(total()))}${row('Observations',S.v.clesgb)}</table>${(S.ph.cles||[]).map(d=>`<img src="${d}">`).join('')}`;
+  if(isSortant()&&S.v['net.done'])h+=`<h2>Nettoyage général</h2><table>${row('État',S.v.net)}${row('Observations',S.v.netgb)}</table>`;
+  h+=`<h2>Signatures</h2><table>${row('Date d’entrée',fmtDate(S.v.dent))}${row('Commentaire du locataire',S.v.com)}</table>`;
+  SIG.forEach(([k,l,d])=>{if(S.v[k]||nm(k,d))h+=`<p>${esc(l)} ${esc(nm(k,d))}${k==='sgX'?'<br>'+esc(S.v.sgXadr||'485, chemin Thomas Garbies 06610 La Gaude')+(S.v.heurefin?'<br>Heure de fin : '+esc(S.v.heurefin):''):''}<br>${S.v[k]?`<img src="${S.v[k]}" style="max-width:260px;border:1px solid #999">`:''}</p>`});
   h+=`<h2>Légende</h2><p style="font-size:13px;color:#5d6d76">États : NV non vérifié · NF neuf · BE bon état · EU état d’usage · ME mauvais état · HS hors service<br>
     TrCh : Trous de Chevilles<br>TDH : Traces D’Habitation<br>TDHP : Traces D’Habitation Prononcées<br>DDE : Dégât Des Eaux<br>
     1 = à réparer ou changer · 2 = à nettoyer</p>`;
@@ -1426,17 +1448,12 @@ document.addEventListener('focusin',e=>{$('#qb').style.display=e.target.classLis
   try {
     const params = new URLSearchParams(window.location.search);
     if (params.size === 0) return;
-
     const get = (key) => {
       const val = params.get(key);
       return val ? decodeURIComponent(val.replace(/\+/g, ' ')).trim() : '';
     };
-
     let filled = 0;
-
     if (get('rdv')) { S.v.rdv = get('rdv'); filled++; }
-
-    // Date + Heure (format "Oct 08, 2026 09:30-11:00")
     const rawDate = get('date');
     if (rawDate) {
       const m = rawDate.match(/([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})\s+(\d{1,2}:\d{2})/);
@@ -1445,34 +1462,16 @@ document.addEventListener('focusin',e=>{$('#qb').style.display=e.target.classLis
         const month = months[m[1].toLowerCase().slice(0,3)];
         if (month) {
           S.v.date = m[3] + '-' + String(month).padStart(2,'0') + '-' + String(m[2]).padStart(2,'0');
-          S.v.heure = m[4];
-          filled += 2;
-        } else {
-          S.v.date = rawDate;
-          filled++;
-        }
-      } else {
-        S.v.date = rawDate;
-        filled++;
-      }
+          S.v.heure = m[4]; filled += 2;
+        } else { S.v.date = rawDate; filled++; }
+      } else { S.v.date = rawDate; filled++; }
     }
-    if (get('heure') && get('heure') !== 'Array') {
-      S.v.heure = get('heure');
-      filled++;
-    }
-
-    // Statut (boutons)
+    if (get('heure') && get('heure') !== 'Array') { S.v.heure = get('heure'); filled++; }
     if (get('statut')) { S.v.statut = get('statut'); filled++; }
-
-    // Client
     if (get('client')) { S.v.client = get('client'); filled++; }
     if (get('cliente')) { S.v.cliente = get('cliente'); filled++; }
     if (get('clientte')) { S.v.clientte = get('clientte'); filled++; }
-
-    // Nom du propriétaire
     if (get('prop')) { S.v.prop = get('prop'); filled++; }
-
-    // Adresse / ville
     if (get('adr')) { S.v.adr = get('adr'); filled++; }
     const villeRaw = get('ville');
     if (villeRaw) {
@@ -1483,45 +1482,28 @@ document.addEventListener('focusin',e=>{$('#qb').style.display=e.target.classLis
       } else if (/^\d{5}/.test(villeRaw)) {
         S.v.cp = villeRaw.substring(0, 5);
         S.v.ville = villeRaw.substring(5).trim();
-      } else {
-        S.v.ville = villeRaw;
-      }
+      } else { S.v.ville = villeRaw; }
       filled++;
     }
     if (get('cp')) { S.v.cp = get('cp'); filled++; }
-
     if (get('meub')) { S.v.meub = get('meub'); filled++; }
+    if (get('sousType')) { S.v.sousType = get('sousType'); filled++; }
     if (get('typ')) { S.v.typ = get('typ'); filled++; }
     if (get('etage')) { S.v.etage = get('etage'); filled++; }
-
-    // Locataires
     if (get('ent')) { S.v.ent = get('ent'); filled++; }
     if (get('entem')) { S.v.entem = get('entem'); filled++; }
     if (get('entte')) { S.v.entte = get('entte'); filled++; }
     if (get('sor')) { S.v.sor = get('sor'); filled++; }
     if (get('sorem')) { S.v.sorem = get('sorem'); filled++; }
     if (get('sorte')) { S.v.sorte = get('sorte'); filled++; }
-
-    // Type EDL
-    if (get('sensE') === '1' || get('type') === 'entree') {
-      S.v.sensE = true;
-      delete S.v.sensS;
-      filled++;
-    }
-    if (get('sensS') === '1' || get('type') === 'sortie') {
-      S.v.sensS = true;
-      delete S.v.sensE;
-      filled++;
-    }
-
+    if (get('sensE') === '1' || get('type') === 'entree') { S.v.sensE = true; delete S.v.sensS; filled++; }
+    if (get('sensS') === '1' || get('type') === 'sortie') { S.v.sensS = true; delete S.v.sensE; filled++; }
     if (filled > 0) {
       S.tab = 'gen';
       try { save(); } catch(e) {}
       try { msg(filled + ' champ(s) pré-rempli(s) depuis Jotform'); } catch(e) {}
     }
-  } catch(e) {
-    console.error('Erreur prefillFromURL', e);
-  }
+  } catch(e) { console.error('Erreur prefillFromURL', e); }
 })();
 
 render();
