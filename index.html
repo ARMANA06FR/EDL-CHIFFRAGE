@@ -158,7 +158,45 @@ const SOUSTYPES={
   'Terrain':['Terrain à bâtir','Terrain de loisir']
 };
 const CPT=[
-['Équipements',[['ecs','Eau chaude',['Cumulus','Chauffe-eau gaz','Collectif']],['ecsm','Marque / modèle'],['chf','Chauffage',['Indiv. élec.','Indiv. gaz','Collectif']],['daaf','DAAF',['Oui','Non']],['daafl','Emplacement DAAF'],['cert','Certificat d’entretien',['Oui','Non']],['chd','Chaudière',['Fuel','Gaz']],['cuve','Niveau cuve (litres)'],['chc','Certificat d’entretien chaudière',['Oui','Non']],['chdate','Daté du','date']]]];
+['Chauffage',[
+  ['chfType','Type d’installation',['Individuel','Collectif','Mixte']],
+  ['chfEnergie','Énergie principale',['Électricité','Gaz de réseau','Fioul','Bois / granulés','Pompe à chaleur','Réseau de chaleur','GPL (citerne)','Autre']],
+  ['chfAppareil','Appareil principal',['Chaudière','Poêle / insert','Radiateurs / convecteurs','Plancher chauffant','PAC air/air','PAC air/eau','PAC géothermie','Autre']],
+  ['chfMarque','Marque / modèle'],
+  ['chfPuissance','Puissance (kW)'],
+  ['chfNb','Nombre d’appareils principaux'],
+  ['chfEntretien','Certificat d’entretien',['Oui','Non','Non présenté']],
+  ['chfEntretienDate','Daté du','date'],
+  ['chfRamonage','Certificat de ramonage',['Oui','Non','Non concerné','Non présenté']],
+  ['chfRamonageDate','Daté du','date'],
+  ['chfCuve','Niveau cuve fioul (litres)'],
+  ['chfCuveEtat','État de la cuve',['Bon','Corrosion visible','Fuite / doute','Non vérifié']],
+  ['chfObs','Observations chauffage']
+]],
+['Eau chaude sanitaire (ECS)',[
+  ['ecsMode','Mode de production',['Ballon électrique (cumulus)','Chauffe-eau gaz','Chauffe-eau thermodynamique','Solaire (CESI)','Produite par la chaudière / PAC','Collectif','Instantané électrique','Autre']],
+  ['ecsMarque','Marque / modèle'],
+  ['ecsCapacite','Capacité (litres)'],
+  ['ecsAnnee','Année approx.'],
+  ['ecsEntretien','Certificat d’entretien ECS',['Oui','Non','Non concerné','Non présenté']],
+  ['ecsEntretienDate','Daté du','date'],
+  ['ecsObs','Observations ECS']
+]],
+['Détecteurs de fumée (DAAF)',[
+  ['daaf','Présence DAAF',['Oui','Non','Non vérifié']],
+  ['daafNb','Nombre de détecteurs'],
+  ['daafEmpl','Emplacements'],
+  ['daafPile','État des piles / alimentation',['OK','À changer','Absent','Non vérifié']],
+  ['daafDate','Date de mise en service / remplacement','date'],
+  ['daafObs','Observations DAAF']
+]],
+['Autres équipements techniques',[
+  ['vmc','Ventilation',['VMC simple flux','VMC double flux','Autogyre','VH','VB','Aucune / naturelle','Non vérifié']],
+  ['clim','Climatisation',['Oui – fixe','Oui – mobile','Non','Non vérifié']],
+  ['climMarque','Marque clim'],
+  ['autresEqui','Autres (poêle d’appoint, insert, etc.)']
+]]
+];
 const MT={'Eau':['Froide (m³)','Chaude (m³)'],'Électricité':['HP (kWh)','HC (kWh)'],'Gaz':['Index (m³)',''],'Autre':['Index 1','Index 2']};
 const SS=ST.map(x=>x[0]),SN=['Baignoire','Douche','Lavabo','Bidet'],SC=['Mél./Mitig.','Bonde','Siphon','Jt silicone','Flexible','Douchette','Inverseur'];
 const ANN0=['Boîte à lettres','Cave','Garage','Grenier'];
@@ -816,7 +854,23 @@ applyTheme();
 $('#themeBtn').onclick=toggleTheme;
 const isSortant=()=>!!S.v.sensS;
 
-const chip=(k,v,l,t,col)=>`<button class="c${S.v[k]===v?' on':''}" data-k="${esc(k)}" data-v="${esc(v)}"${col?` style="--c:var(${col});--t:#fff"`:''}${t?` title="${esc(t)}"`:''}>${esc(l)}</button>`;
+/* Clés autorisant la sélection multiple (plusieurs chips actifs) */
+const MULTI_KEYS=new Set(['chfEnergie','chfAppareil','ecsMode','vmc']);
+function isMultiOn(k,v){
+  const cur=S.v[k];
+  if(Array.isArray(cur))return cur.includes(v);
+  return cur===v;
+}
+function multiVal(k){
+  const cur=S.v[k];
+  if(Array.isArray(cur))return cur;
+  if(cur)return [cur];
+  return [];
+}
+const chip=(k,v,l,t,col)=>{
+  const on=MULTI_KEYS.has(k)?isMultiOn(k,v):(S.v[k]===v);
+  return `<button class="c${on?' on':''}" data-k="${esc(k)}" data-v="${esc(v)}"${MULTI_KEYS.has(k)?' data-multi="1"':''}${col?` style="--c:var(${col});--t:#fff"`:''}${t?` title="${esc(t)}"`:''}>${esc(l)}</button>`;
+};
 if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js').catch(()=>{})}
 
 const sel=(k,o)=>`<select data-k="${esc(k)}"><option value="">—</option>${o.map(x=>`<option${S.v[k]===x?' selected':''}>${esc(x)}</option>`).join('')}</select>`;
@@ -826,9 +880,88 @@ function fld([k,l,t]){
     return `<label class="f">${esc(l||'Catégorie')}<select data-k="sousType"><option value="">—</option>${opts.map(o=>`<option${S.v.sousType===o?' selected':''}>${esc(o)}</option>`).join('')}</select></label>`;
   }
   if(Array.isArray(t))return `<div class="seg">${l?`<span>${esc(l)}</span>`:''}${t.map(o=>chip(k,o,o)).join('')}</div>`;
+  if(t==='textarea'||/Obs/i.test(l||''))return `<label class="f" style="grid-column:1/-1">${esc(l)}<textarea class="ob" rows="2" data-k="${k}" placeholder="${esc(l)}">${esc(S.v[k]||'')}</textarea></label>`;
   return `<label class="f">${esc(l)}<input data-k="${k}" type="${t||'text'}" value="${esc(S.v[k]||'')}"></label>`;
 }
 const groups=G=>G.map(([t,f])=>`<h3>${esc(t)}</h3><div class="g">${f.map(fld).join('')}</div>`).join('');
+
+/* Rendu conditionnel de l’onglet Équipements */
+function renderEqui(){
+  const v=S.v;
+  const energies=multiVal('chfEnergie');
+  const showIndiv=v.chfType==='Individuel'||v.chfType==='Mixte'||!v.chfType;
+  const combustible=energies.some(e=>['Gaz de réseau','Fioul','Bois / granulés','GPL (citerne)'].includes(e));
+  const isPac=energies.includes('Pompe à chaleur');
+  const isFioul=energies.includes('Fioul');
+  const showChfDetails=showIndiv||combustible||isPac||energies.length>0;
+  const showDaafDetails=v.daaf==='Oui';
+  const showClimMarque=v.clim&&String(v.clim).startsWith('Oui');
+  const ecsModes=multiVal('ecsMode');
+  const showEcsEntretien=ecsModes.length>0&&!ecsModes.every(m=>['Collectif','Produite par la chaudière / PAC'].includes(m));
+
+  let h='<h2>Équipements</h2>';
+
+  // --- Chauffage ---
+  h+='<h3>Chauffage</h3><div class="g">';
+  h+=fld(['chfType','Type d’installation',['Individuel','Collectif','Mixte']]);
+  h+=fld(['chfEnergie','Énergie principale',['Électricité','Gaz de réseau','Fioul','Bois / granulés','Pompe à chaleur','Réseau de chaleur','GPL (citerne)','Autre']]);
+  if(showIndiv||isPac||energies.length){
+    h+=fld(['chfAppareil','Appareil principal',['Chaudière','Poêle / insert','Radiateurs / convecteurs','Plancher chauffant','PAC air/air','PAC air/eau','PAC géothermie','Autre']]);
+  }
+  if(showChfDetails){
+    h+=fld(['chfMarque','Marque / modèle']);
+    h+=fld(['chfPuissance','Puissance (kW)']);
+    h+=fld(['chfNb','Nombre d’appareils principaux']);
+  }
+  if(combustible||isPac){
+    h+=fld(['chfEntretien','Certificat d’entretien',['Oui','Non','Non présenté']]);
+    if(v.chfEntretien==='Oui')h+=fld(['chfEntretienDate','Daté du','date']);
+    h+=fld(['chfRamonage','Certificat de ramonage',['Oui','Non','Non concerné','Non présenté']]);
+    if(v.chfRamonage==='Oui')h+=fld(['chfRamonageDate','Daté du','date']);
+  }
+  if(isFioul){
+    h+=fld(['chfCuve','Niveau cuve fioul (litres)']);
+    h+=fld(['chfCuveEtat','État de la cuve',['Bon','Corrosion visible','Fuite / doute','Non vérifié']]);
+  }
+  h+=fld(['chfObs','Observations chauffage','textarea']);
+  h+='</div>';
+
+  // --- ECS ---
+  h+='<h3>Eau chaude sanitaire (ECS)</h3><div class="g">';
+  h+=fld(['ecsMode','Mode de production',['Ballon électrique (cumulus)','Chauffe-eau gaz','Chauffe-eau thermodynamique','Solaire (CESI)','Produite par la chaudière / PAC','Collectif','Instantané électrique','Autre']]);
+  h+=fld(['ecsMarque','Marque / modèle']);
+  h+=fld(['ecsCapacite','Capacité (litres)']);
+  h+=fld(['ecsAnnee','Année approx.']);
+  if(showEcsEntretien){
+    h+=fld(['ecsEntretien','Certificat d’entretien ECS',['Oui','Non','Non concerné','Non présenté']]);
+    if(v.ecsEntretien==='Oui')h+=fld(['ecsEntretienDate','Daté du','date']);
+  }
+  h+=fld(['ecsObs','Observations ECS','textarea']);
+  h+='</div>';
+
+  // --- DAAF ---
+  h+='<h3>Détecteurs de fumée (DAAF)</h3><div class="g">';
+  h+=fld(['daaf','Présence DAAF',['Oui','Non','Non vérifié']]);
+  if(showDaafDetails){
+    h+=fld(['daafNb','Nombre de détecteurs']);
+    h+=fld(['daafEmpl','Emplacements']);
+    h+=fld(['daafPile','État des piles / alimentation',['OK','À changer','Absent','Non vérifié']]);
+    h+=fld(['daafDate','Date de mise en service / remplacement','date']);
+  }
+  h+=fld(['daafObs','Observations DAAF','textarea']);
+  h+='</div>';
+
+  // --- Autres ---
+  h+='<h3>Autres équipements techniques</h3><div class="g">';
+  h+=fld(['vmc','Ventilation',['VMC simple flux','VMC double flux','Autogyre','VH','VB','Aucune / naturelle','Non vérifié']]);
+  h+=fld(['clim','Climatisation',['Oui – fixe','Oui – mobile','Non','Non vérifié']]);
+  if(showClimMarque)h+=fld(['climMarque','Marque clim']);
+  h+=fld(['autresEqui','Autres (poêle d’appoint, insert, etc.)','textarea']);
+  h+='</div>';
+
+  h+=`<div class="act"><button class="btn ${S.v['equi.done']?'p':''} sm" data-act="donebtn" data-r="equi">${S.v['equi.done']?'✓ Section terminée':'Marquer comme terminée'}</button></div>`;
+  return h;
+}
 function contactsBlock(){
   const P=[['Client',S.v.client,S.v.cliente,S.v.clientte],['Locataire entrant',S.v.ent,S.v.entem,S.v.entte],['Locataire sortant',S.v.sor,S.v.sorem,S.v.sorte]];
   const rows=P.filter(([l,n,e,t])=>n||e||t).map(([l,n,e,t],i)=>{
@@ -904,7 +1037,7 @@ function dynList(arr,tag,extra,ph){
 function tabFilled(id){
   if(id==='gen')return !!(S.v.sensE||S.v.sensS||GENKEYS.some(k=>S.v[k]));
   if(id==='cpt')return S.cp.some(c=>{const k='cp'+c.id;return S.v[k+'n']||S.v[k+'e']||S.v[k+'a']||S.v[k+'b']||S.v[k+'svc']||S.v[k+'obs']});
-  if(id==='equi')return CPTKEYS.some(k=>S.v[k]);
+  if(id==='equi')return CPTKEYS.some(k=>{const val=S.v[k];return Array.isArray(val)?val.length>0:!!val});
   if(id==='inv')return S.iv.some(r=>{const k='iv'+r.id;return S.v[k+'p']||S.v[k+'d']||S.v[k+'s']||S.v[k+'a']||S.v[k+'b']});
   if(id==='ann')return S.an.some(o=>{const k='an'+o.id+'.';return S.v[k+'p']||S.v[k+'s']||S.v[k+'m']||S.v[k+'b']||S.v[k+'num']});
   if(id==='cles')return total()>0;
@@ -1034,7 +1167,7 @@ function renderCore(){
     h+=contactsBlock();
   }
   else if(T==='cpt')h=`<h2>Compteurs</h2>${meters()}${photoBlock('cpt')}<div class="act"><button class="btn ${S.v['cpt.done']?'p':''} sm" data-act="donebtn" data-r="cpt">${S.v['cpt.done']?'✓ Section terminée':'Marquer comme terminée'}</button></div>`;
-  else if(T==='equi')h=`<h2>Équipements</h2>${groups(CPT)}<div class="act"><button class="btn ${S.v['equi.done']?'p':''} sm" data-act="donebtn" data-r="equi">${S.v['equi.done']?'✓ Section terminée':'Marquer comme terminée'}</button></div>`;
+  else if(T==='equi')h=renderEqui();
   else if(T==='ann')h=`<h2>Annexes</h2>${dynList(S.an,'an',(k,o)=>`<div class="g">${['Cave','Garage','Grenier'].includes(o.n)?`<label class="f">N°<input data-k="${k}num" value="${esc(S.v[k+'num']||'')}"></label>`:''}<label class="f">Porte${sel(k+'p',SS)}</label><label class="f">Serrure${sel(k+'s',SS)}</label><label class="f">Vide ou m³ à vider<input data-k="${k}m" value="${esc(S.v[k+'m']||'')}"></label></div>${ob(k)}`)}${photoBlock('ann')}<div class="act"><button class="btn ${S.v['ann.done']?'p':''} sm" data-act="donebtn" data-r="ann">${S.v['ann.done']?'✓ Section terminée':'Marquer comme terminée'}</button></div>`;
   else if(T==='cles')h=`<h2>Clés remises</h2>${dynList(S.kl,'kl',(k,o)=>`<div class="g"><label class="f">Quantité<input type="number" min="0" inputmode="numeric" data-k="${k}q" value="${esc(S.v[k+'q']||'')}"></label>${['Émetteur','Clé magnétique'].includes(o.n)?`<label class="f">État${sel(k+'s',SS)}</label>`:''}</div>`)}<p><b>Total clés : <span id="tot">${total()}</span></b></p><h3>Observations</h3>${ob('clesg')}${photoBlock('cles')}<div class="act"><button class="btn ${S.v['cles.done']?'p':''} sm" data-act="donebtn" data-r="cles">${S.v['cles.done']?'✓ Section terminée':'Marquer comme terminée'}</button></div>`;
   else if(T==='net')h=`<h2>Nettoyage général</h2><div class="row">${['Bon','Moyen','Médiocre'].map(o=>chip('net',o,o)).join('')}</div>${ob('netg')}<div class="act"><button class="btn ${S.v['net.done']?'p':''} sm" data-act="donebtn" data-r="net">${S.v['net.done']?'✓ Section terminée':'Marquer comme terminée'}</button></div>`;
@@ -1109,7 +1242,20 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('.c');
   if(b && !b.dataset.act){const k=b.dataset.k;
     if(b.dataset.t){S.v[k]=!S.v[k];b.classList.toggle('on',!!S.v[k]);if(k==='sensE'||k==='sensS')render()}
-    else{const v=b.dataset.v;S.v[k]=S.v[k]===v?'':v;b.parentElement.querySelectorAll('.c[data-v]').forEach(x=>x.classList.toggle('on',S.v[k]===x.dataset.v));if(k==='meub'){const opts=SOUSTYPES[S.v.meub]||[];if(!opts.includes(S.v.sousType))delete S.v.sousType;render();save();return}}
+    else if(b.dataset.multi==='1'||MULTI_KEYS.has(k)){
+      // Sélection multiple : bascule la valeur dans un tableau
+      let arr=multiVal(k);
+      const v=b.dataset.v;
+      if(arr.includes(v))arr=arr.filter(x=>x!==v);
+      else arr=[...arr,v];
+      S.v[k]=arr.length?arr:undefined;
+      b.parentElement.querySelectorAll('.c[data-v]').forEach(x=>x.classList.toggle('on',arr.includes(x.dataset.v)));
+      if(S.tab==='equi'){render();save();return}
+      save();return}
+    else{const v=b.dataset.v;S.v[k]=S.v[k]===v?'':v;b.parentElement.querySelectorAll('.c[data-v]').forEach(x=>x.classList.toggle('on',S.v[k]===x.dataset.v));if(k==='meub'){const opts=SOUSTYPES[S.v.meub]||[];if(!opts.includes(S.v.sousType))delete S.v.sousType;render();save();return}
+      // Re-render equipments tab when conditional chips change
+      const equiCond=['chfType','chfEnergie','chfEntretien','chfRamonage','ecsMode','ecsEntretien','daaf','clim'];
+      if(equiCond.includes(k)&&S.tab==='equi'){render();save();return}}
     save();return}
   const a=e.target.closest('[data-act]');if(!a)return;const d=a.dataset;
   if(d.act==='add'){const t=$('#nt').value,n=S.rooms.filter(r=>r.t===t).length+1;const r={id:'r'+Date.now(),n:TPL[t].l.split(' (')[0]+(n>1?' '+n:''),t};S.rooms.push(r);S.tab=r.id;render();save()}
@@ -1315,7 +1461,8 @@ function recap(){
   const cnt={r1:0,r2:0};const tick=s=>{if(s)cnt[s]=(cnt[s]||0)+1};
   const row=(a,b)=>b?`<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`:'';
   const rowS=(a,b,s)=>b?`<tr style="background:${STCLR[s]||''}"><td>${esc(a)}</td><td>${esc(b)}</td></tr>`:'';
-  const tbl=G=>G.map(([t,f])=>`<h2>${esc(t)}</h2><table>${f.map(([k,l,typ])=>row(l,typ==='date'?fmtDate(S.v[k]):(k==='sousType'||k==='meub'?S.v[k]:S.v[k]))).join('')}</table>`).join('');
+  const fmtVal=val=>{if(Array.isArray(val))return val.join(' · ');return val||''};
+  const tbl=G=>G.map(([t,f])=>`<h2>${esc(t)}</h2><table>${f.map(([k,l,typ])=>row(l,typ==='date'?fmtDate(S.v[k]):fmtVal(S.v[k]))).join('')}</table>`).join('');
   const typ=[S.v.sensE&&'Entrant',S.v.sensS&&'Sortant'].filter(Boolean).join(' + ')||'—';
   let h=`<div class="hdband"><span class="brand">EDL 06 IMMO</span><span class="sub">Constat d’état des lieux</span></div><table>${row('Type d’état des lieux',typ)}</table>${tbl(GEN)}<h2>Compteurs</h2><table>${S.cp.map(c=>{const k='cp'+c.id,l=MT[c.t];const parts=[S.v[k+'svc'],S.v[k+'a']&&(l[0]+' : '+S.v[k+'a']),l[1]&&S.v[k+'b']&&(l[1]+' : '+S.v[k+'b']),S.v[k+'obs']&&('Obs. : '+S.v[k+'obs'])].filter(Boolean);return row(c.t+(S.v[k+'n']?' n° '+S.v[k+'n']:'')+(S.v[k+'e']?' ('+S.v[k+'e']+')':''),parts.join(' — '))}).join('')}</table>${(S.ph.cpt||[]).map(d=>`<img src="${d}">`).join('')}${tbl(CPT)}`;
   const line=(p,key,def)=>{const [n,o,cn,chk,dp,cond]=def,k=p+'.'+key,s=S.v[k+'s'],b=S.v[k+'b'];
