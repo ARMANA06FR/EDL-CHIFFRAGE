@@ -73,6 +73,7 @@ input:focus-visible,select:focus-visible,button:focus-visible,textarea:focus-vis
 .ph div{position:relative}
 .ph img{width:96px;height:96px;object-fit:cover;border-radius:8px}
 .ph button{position:absolute;top:2px;right:2px;border:0;background:#000a;color:#fff;border-radius:50%;width:24px;height:24px}
+.ph button.ph-save{right:28px;background:#0e6d8ccc;font-size:14px;line-height:24px}
 .kg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
 canvas.sg{width:100%;height:225px;background:#fff;border:1px solid var(--line);border-radius:8px;touch-action:none}
 canvas.sg.locked{border-color:var(--be);border-width:2px}
@@ -1151,7 +1152,28 @@ function tabs(){
   $('#tabs').innerHTML=t.map(([k,l])=>`<button class="tb${S.tab===k?' on':''}" data-tab="${k}">${esc(l)}${tabFilled(k)?'<span class="dot"></span>':''}</button>`).join('');
 }
 const total=()=>S.kl.reduce((a,o)=>a+(parseInt(S.v['kl'+o.id+'.q'])||0),0);
-function phView(id){return (S.ph[id]||[]).map((d,i)=>`<div><img src="${d}" alt="Photo ${i+1}"><button data-act="rmph" data-r="${id}" data-i="${i}" aria-label="Supprimer la photo">×</button></div>`).join('')}
+function phView(id){return (S.ph[id]||[]).map((d,i)=>`<div><img src="${d}" alt="Photo ${i+1}"><button data-act="rmph" data-r="${id}" data-i="${i}" aria-label="Supprimer la photo">×</button><button data-act="saveph" data-r="${id}" data-i="${i}" class="ph-save" aria-label="Enregistrer dans la galerie" title="Enregistrer dans la galerie">↓</button></div>`).join('')}
+async function dataUrlToFile(dataUrl,name){
+  const res=await fetch(dataUrl);const blob=await res.blob();
+  return new File([blob],name,{type:blob.type||'image/jpeg'});
+}
+async function savePhotoToDevice(dataUrl,filename){
+  filename=filename||('EDL_photo_'+new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')+'.jpg');
+  try{
+    const file=await dataUrlToFile(dataUrl,filename);
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:'Photo EDL',text:'Photo état des lieux'});
+      msg('Photo proposée — choisis « Enregistrer l’image » ou Photos');
+      return;
+    }
+  }catch(e){if(e&&e.name==='AbortError')return;}
+  try{
+    const a=document.createElement('a');
+    a.href=dataUrl;a.download=filename;
+    document.body.appendChild(a);a.click();a.remove();
+    msg('Photo téléchargée — regarde dans Téléchargements / Galerie');
+  }catch(e2){msg('Enregistrement impossible sur cet appareil')}
+}
 function render(){
   try{renderCore()}
   catch(e){console.error(e);msg('Erreur d’affichage — touche « Nouveau » si le formulaire reste bloqué');}
@@ -1281,6 +1303,7 @@ document.addEventListener('click',e=>{
   if(d.act==='delkl'){S.kl=S.kl.filter(o=>o.id!==d.r);render();save()}
   if(d.act==='dupkl'){const i=S.kl.findIndex(o=>o.id===d.r);S.kl.splice(i+1,0,{id:'k'+Date.now(),n:S.kl[i].n});render();save()}
   if(d.act==='rmph'){S.ph[d.r].splice(+d.i,1);const el=document.getElementById('phs-'+d.r)||$('#phs');if(el)el.innerHTML=phView(d.r);savePh()}
+  if(d.act==='saveph'){const list=S.ph[d.r]||[];const data=list[+d.i];if(data)savePhotoToDevice(data,'EDL_'+(S.v.rdv||'')+'_'+(d.r)+'_'+(+d.i+1)+'.jpg');return}
   if(d.act==='clr'){delete S.v[d.k];save();sigInit()}
   if(d.act==='lock'){if(!S.v[d.k]){msg('Signe d’abord avant de valider');return}S.v[d.k+'lock']=true;if(d.k==='sgX'){const now=new Date();S.v.heurefin=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')}save();render()}
   if(d.act==='unlock'){delete S.v[d.k+'lock'];save();render()}
@@ -1427,8 +1450,15 @@ document.addEventListener('change',async e=>{
     t.value='';return}
   if(t.dataset.act==='impchk'){S.v[t.dataset.k]=t.checked;save();render();return}
   if(t.dataset.ph){const id=t.dataset.ph;S.ph[id]=S.ph[id]||[];
-    for(const f of t.files){try{S.ph[id].push(await shrink(f))}catch(x){msg('Photo illisible')}}
-    const el=document.getElementById('phs-'+id)||$('#phs');if(el)el.innerHTML=phView(id);savePh();t.value=''}
+    const fromCamera=!!t.hasAttribute('capture');
+    let lastData=null;
+    for(const f of t.files){try{const data=await shrink(f);S.ph[id].push(data);lastData=data}catch(x){msg('Photo illisible')}}
+    const el=document.getElementById('phs-'+id)||$('#phs');if(el)el.innerHTML=phView(id);savePh();t.value='';
+    // Après capture caméra : proposer d’enregistrer dans la galerie (Share API ou téléchargement)
+    if(fromCamera&&lastData){
+      setTimeout(()=>savePhotoToDevice(lastData,'EDL_'+(S.v.rdv||'photo')+'_'+id+'_'+S.ph[id].length+'.jpg'),300);
+    }
+  }
   else{onIn(e);if(t.tagName==='SELECT'&&/o$/.test(t.dataset.k||''))render()}
 });
 async function shrink(f){
